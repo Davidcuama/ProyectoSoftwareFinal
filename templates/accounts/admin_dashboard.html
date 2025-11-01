@@ -1,0 +1,214 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}Panel de Administración - Gestor de Finanzas{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <h2><i class="fas fa-cog me-2"></i>Panel de Administración</h2>
+            <p class="text-muted">Gestiona usuarios y monitorea la actividad del sistema</p>
+        </div>
+    </div>
+
+    <!-- Estadísticas principales -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="stats-card">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <div class="stats-label">Total Usuarios</div>
+                        <div class="stats-value">{{ total_users }}</div>
+                    </div>
+                    <div class="stats-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stats-card">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <div class="stats-label">Administradores</div>
+                        <div class="stats-value">{{ total_admins }}</div>
+                    </div>
+                    <div class="stats-icon">
+                        <i class="fas fa-user-shield"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stats-card">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <div class="stats-label">Usuarios Regulares</div>
+                        <div class="stats-value">{{ total_regular_users }}</div>
+                    </div>
+                    <div class="stats-icon">
+                        <i class="fas fa-user"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stats-card">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <div class="stats-label">Total Transacciones</div>
+                        <div class="stats-value">{{ total_transactions }}</div>
+                    </div>
+                    <div class="stats-icon">
+                        <i class="fas fa-exchange-alt"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Estadísticas financieras -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="stats-card income">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <div class="stats-label">Total Ingresos</div>
+                        <div class="stats-value">{{ total_income|floatformat:2 }} $</div>
+                    </div>
+                    <div class="stats-icon">
+                        <i class="fas fa-arrow-up"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="stats-card expense">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <div class="stats-label">Total Gastos</div>
+                        <div class="stats-value">{{ total_expenses|floatformat:2 }} $</div>
+                    </div>
+                    <div class="stats-icon">
+                        <i class="fas fa-arrow-down"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Usuarios recientes -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-clock me-2"></i>Usuarios Recientes
+                </div>
+                <div class="card-body">
+                    {% if recent_users %}
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Usuario</th>
+                                        <th>Nombre</th>
+                                        <th>Email</th>
+                                        <th>Rol</th>
+                                        <th>Fecha de Registro</th>
+                                        <th>Estado</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for user in recent_users %}
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <div class="avatar-circle me-2">
+                                                    {{ user.username|first|upper }}
+                                                </div>
+                                                {{ user.username }}
+                                            </div>
+                                        </td>
+                                        <td>{{ user.first_name }} {{ user.last_name }}</td>
+                                        <td>{{ user.email|default:"Sin email" }}</td>
+                                        <td>
+                                            <span class="badge {% if user.profile.is_admin %}bg-danger{% else %}bg-primary{% endif %}">
+                                                {{ user.profile.get_role_display }}
+                                            </span>
+                                        </td>
+                                        <td>{{ user.date_joined|date:"d/m/Y H:i" }}</td>
+                                        <td>
+                                            <span class="badge {% if user.is_active %}bg-success{% else %}bg-secondary{% endif %}">
+                                                {% if user.is_active %}Activo{% else %}Inactivo{% endif %}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="text-center mt-3">
+                            <a href="{% url 'accounts:user_list' %}" class="btn btn-outline-primary">
+                                <i class="fas fa-list me-1"></i>Ver Todos los Usuarios
+                            </a>
+                        </div>
+                    {% else %}
+                        <p class="text-muted text-center py-3">
+                            <i class="fas fa-info-circle me-2"></i>No hay usuarios registrados.
+                        </p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Acciones rápidas -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-bolt me-2"></i>Acciones Rápidas
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4 col-sm-6 mb-3">
+                            <a href="{% url 'accounts:user_list' %}" class="btn btn-primary w-100">
+                                <i class="fas fa-users me-2"></i>Gestionar Usuarios
+                            </a>
+                        </div>
+                        <div class="col-md-4 col-sm-6 mb-3">
+                            <a href="{% url 'transactions:transaction_list' %}" class="btn btn-outline-primary w-100">
+                                <i class="fas fa-exchange-alt me-2"></i>Ver Transacciones
+                            </a>
+                        </div>
+                        <div class="col-md-4 col-sm-6 mb-3">
+                            <a href="{% url 'dashboard:dashboard' %}" class="btn btn-outline-secondary w-100">
+                                <i class="fas fa-tachometer-alt me-2"></i>Dashboard Principal
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+.avatar-circle {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: #007bff;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 14px;
+}
+</style>
+{% endblock %}

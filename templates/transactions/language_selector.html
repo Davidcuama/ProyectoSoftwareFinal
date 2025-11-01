@@ -1,0 +1,21 @@
+<div class="dropdown">
+    <button class="btn btn-outline-light dropdown-toggle" type="button" id="languageSelector" data-bs-toggle="dropdown">
+        <i class="fas fa-language me-1"></i>
+        {% if current_language == 'es' %}Español{% else %}English{% endif %}
+    </button>
+    <ul class="dropdown-menu">
+        {% for code, name in languages %}
+        <li>
+            <form action="{% url 'set_language' %}" method="post" style="display: inline;">
+                {% csrf_token %}
+                <input type="hidden" name="language" value="{{ code }}">
+                <button type="submit" class="dropdown-item {% if current_language == code %}active{% endif %}" 
+                        style="background: none; border: none; width: 100%; text-align: left;">
+                    <i class="fas fa-check me-2" style="{% if current_language != code %}opacity: 0;{% endif %}"></i>{{ name }}
+                </button>
+            </form>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+

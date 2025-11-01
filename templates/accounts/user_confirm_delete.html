@@ -1,0 +1,99 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}Eliminar Usuario - Gestor de Finanzas{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-custom border-radius-custom">
+                <div class="card-header bg-danger text-white">
+                    <h4 class="mb-0">
+                        <i class="fas fa-exclamation-triangle me-2"></i>Confirmar Eliminación
+                    </h4>
+                </div>
+                <div class="card-body p-4">
+                    <div class="alert alert-warning">
+                        <i class="fas fa-warning me-2"></i>
+                        <strong>¡Atención!</strong> Esta acción no se puede deshacer.
+                    </div>
+                    
+                    <div class="text-center mb-4">
+                        <div class="avatar-circle mx-auto mb-3" style="width: 80px; height: 80px; font-size: 32px;">
+                            {{ object.username|first|upper }}
+                        </div>
+                        <h5>{{ object.username }}</h5>
+                        <p class="text-muted">{{ object.first_name }} {{ object.last_name }}</p>
+                    </div>
+                    
+                    <div class="row mb-4">
+                        <div class="col-6">
+                            <strong>Email:</strong><br>
+                            {{ object.email|default:"Sin email" }}
+                        </div>
+                        <div class="col-6">
+                            <strong>Rol:</strong><br>
+                            <span class="badge {% if object.profile.is_admin %}bg-danger{% else %}bg-primary{% endif %}">
+                                {{ object.profile.get_role_display }}
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-4">
+                        <div class="col-6">
+                            <strong>Fecha de Registro:</strong><br>
+                            {{ object.date_joined|date:"d/m/Y" }}
+                        </div>
+                        <div class="col-6">
+                            <strong>Estado:</strong><br>
+                            <span class="badge {% if object.is_active %}bg-success{% else %}bg-secondary{% endif %}">
+                                {% if object.is_active %}Activo{% else %}Inactivo{% endif %}
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <strong>Información importante:</strong>
+                        <ul class="mb-0 mt-2">
+                            <li>Se eliminarán todas las transacciones asociadas a este usuario</li>
+                            <li>Esta acción es irreversible</li>
+                            <li>El usuario no podrá acceder al sistema después de la eliminación</li>
+                        </ul>
+                    </div>
+                    
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="d-flex justify-content-between">
+                            <a href="{% url 'accounts:user_list' %}" class="btn btn-outline-secondary">
+                                <i class="fas fa-arrow-left me-2"></i>Cancelar
+                            </a>
+                            <button type="submit" class="btn btn-danger">
+                                <i class="fas fa-trash me-2"></i>Eliminar Usuario
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+.avatar-circle {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background-color: #007bff;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 32px;
+}
+</style>
+{% endblock %}

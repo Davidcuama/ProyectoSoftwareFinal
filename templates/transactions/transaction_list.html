@@ -1,0 +1,241 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% load translate %}
+
+{% block title %}Transacciones - Gestor de Finanzas{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <h2><i class="fas fa-exchange-alt me-2"></i>{% trans_custom "Transactions" %}</h2>
+        </div>
+        <div class="col-md-6 text-end">
+            <a href="{% url 'transactions:transaction_create' %}" class="btn btn-primary">
+                <i class="fas fa-plus me-2"></i>{% trans_custom "New Transaction" %}
+            </a>
+            <a href="{% url 'transactions:export_transactions' %}" class="btn btn-outline-success" id="export-transactions">
+                <i class="fas fa-download me-2"></i>{% trans_custom "Export CSV" %}
+            </a>
+        </div>
+    </div>
+
+    <!-- Filtros -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <i class="fas fa-filter me-2"></i>{% trans_custom "Filters" %}
+        </div>
+        <div class="card-body">
+            <form method="get" id="transaction-filter-form">
+                <div class="row">
+                    <div class="col-md-3">
+                        <label class="form-label">{% trans_custom "Type" %}</label>
+                        <select name="type" class="form-select">
+                            <option value="">{% trans_custom "All" %}</option>
+                            {% for value, label in transaction_types %}
+                            <option value="{{ value }}" {% if request.GET.type == value %}selected{% endif %}>
+                                {{ label }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">{% trans_custom "From" %}</label>
+                        <input type="date" name="date_from" class="form-control" value="{{ request.GET.date_from }}">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">{% trans_custom "To" %}</label>
+                        <input type="date" name="date_to" class="form-control" value="{{ request.GET.date_to }}">
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">{% trans_custom "Search" %}</label>
+                        <input type="text" name="search" class="form-control" placeholder="{% trans_custom 'Description' %}..." value="{{ request.GET.search }}">
+                    </div>
+                    <div class="col-md-1">
+                        <label class="form-label">&nbsp;</label>
+                        <button type="button" class="btn btn-outline-secondary w-100" id="clear-filters">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Estadísticas rápidas -->
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="stats-card income">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <div class="stats-label">{% trans_custom "Total Income" %}</div>
+                        <div class="stats-value">{{ total_income|floatformat:2 }} $</div>
+                    </div>
+                    <div class="stats-icon">
+                        <i class="fas fa-arrow-up"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="stats-card expense">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <div class="stats-label">{% trans_custom "Total Expenses" %}</div>
+                        <div class="stats-value">{{ total_expenses|floatformat:2 }} $</div>
+                    </div>
+                    <div class="stats-icon">
+                        <i class="fas fa-arrow-down"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="stats-card balance">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <div class="stats-label">{% trans_custom "Net Balance" %}</div>
+                        <div class="stats-value">{{ balance|floatformat:2 }} $</div>
+                    </div>
+                    <div class="stats-icon">
+                        <i class="fas fa-wallet"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Lista de transacciones -->
+    <div class="card">
+        <div class="card-header">
+            <i class="fas fa-list me-2"></i>{% trans_custom "Transaction List" %}
+            <span class="badge bg-primary ms-2">{{ page_obj.paginator.count }} {% trans_custom "transactions" %}</span>
+        </div>
+        <div class="card-body p-0">
+            {% if transactions %}
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th>{% trans_custom "Date" %}</th>
+                            <th>{% trans_custom "Type" %}</th>
+                            <th>{% trans_custom "Category" %}</th>
+                            <th>{% trans_custom "Description" %}</th>
+                            <th class="text-end">{% trans_custom "Amount" %}</th>
+                            <th class="text-center">{% trans_custom "Actions" %}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for transaction in transactions %}
+                        <tr class="{% if transaction.is_income %}table-success{% else %}table-danger{% endif %}">
+                            <td>{{ transaction.date|date:"d/m/Y" }}</td>
+                            <td>
+                                <span class="badge {% if transaction.is_income %}bg-success{% else %}bg-danger{% endif %}">
+                                    {% translate_type transaction.get_transaction_type_display %}
+                                </span>
+                            </td>
+                            <td>
+                                {% if transaction.category %}
+                                    <span class="badge" style="background-color: {{ transaction.category.color }};">
+                                        <i class="{{ transaction.category.icon }} me-1"></i>{{ transaction.category.name }}
+                                    </span>
+                                {% else %}
+                                    <span class="text-muted">{% trans_custom "No category" %}</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if transaction.description %}
+                                    {{ transaction.description|truncatechars:50 }}
+                                {% else %}
+                                    <span class="text-muted">{% trans_custom "No description" %}</span>
+                                {% endif %}
+                                {% if transaction.tags.all %}
+                                    <div class="mt-1">
+                                        {% for tag in transaction.tags.all %}
+                                            <span class="badge bg-secondary me-1" style="background-color: {{ tag.color }}!important;">
+                                                {{ tag.name }}
+                                            </span>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </td>
+                            <td class="text-end">
+                                <span class="fw-bold {% if transaction.is_income %}text-success{% else %}text-danger{% endif %}">
+                                    {% if transaction.is_income %}+{% else %}-{% endif %}{{ transaction.amount|floatformat:2 }} $
+                                </span>
+                            </td>
+                            <td class="text-center">
+                                <div class="btn-group btn-group-sm">
+                                    <a href="{% url 'transactions:transaction_update' transaction.pk %}" 
+                                       class="btn btn-outline-primary" 
+                                       data-bs-toggle="tooltip" 
+                                       title="{% trans_custom 'Edit' %}">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <a href="{% url 'transactions:transaction_delete' transaction.pk %}" 
+                                       class="btn btn-outline-danger btn-delete" 
+                                       data-bs-toggle="tooltip" 
+                                       title="{% trans_custom 'Delete' %}">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="text-center py-5">
+                <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
+                <h5 class="text-muted">{% trans_custom "No transactions registered" %}</h5>
+                <p class="text-muted">{% trans_custom "Start by adding your first transaction" %}</p>
+                <a href="{% url 'transactions:transaction_create' %}" class="btn btn-primary">
+                    <i class="fas fa-plus me-2"></i>{% trans_custom "Add Transaction" %}
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Paginación -->
+    {% if is_paginated %}
+    <nav aria-label="Paginación de transacciones" class="mt-4">
+        <ul class="pagination justify-content-center">
+            {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page=1{% if request.GET.type %}&type={{ request.GET.type }}{% endif %}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}{% if request.GET.date_from %}&date_from={{ request.GET.date_from }}{% endif %}{% if request.GET.date_to %}&date_to={{ request.GET.date_to }}{% endif %}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">
+                        <i class="fas fa-angle-double-left"></i>
+                    </a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if request.GET.type %}&type={{ request.GET.type }}{% endif %}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}{% if request.GET.date_from %}&date_from={{ request.GET.date_from }}{% endif %}{% if request.GET.date_to %}&date_to={{ request.GET.date_to }}{% endif %}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">
+                        <i class="fas fa-angle-left"></i>
+                    </a>
+                </li>
+            {% endif %}
+
+            <li class="page-item active">
+                <span class="page-link">
+                    Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}
+                </span>
+            </li>
+
+            {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if request.GET.type %}&type={{ request.GET.type }}{% endif %}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}{% if request.GET.date_from %}&date_from={{ request.GET.date_from }}{% endif %}{% if request.GET.date_to %}&date_to={{ request.GET.date_to }}{% endif %}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">
+                        <i class="fas fa-angle-right"></i>
+                    </a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if request.GET.type %}&type={{ request.GET.type }}{% endif %}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}{% if request.GET.date_from %}&date_from={{ request.GET.date_from }}{% endif %}{% if request.GET.date_to %}&date_to={{ request.GET.date_to }}{% endif %}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">
+                        <i class="fas fa-angle-double-right"></i>
+                    </a>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+</div>
+{% endblock %}

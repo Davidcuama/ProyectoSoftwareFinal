@@ -1,0 +1,241 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% load translate %}
+
+{% block title %}Mi Perfil - Gestor de Finanzas{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <!-- Información del perfil -->
+        <div class="col-lg-8">
+            <div class="card shadow-custom border-radius-custom">
+                <div class="card-header">
+                    <h4 class="mb-0">
+                        <i class="fas fa-user-circle me-2"></i>Mi Perfil
+                    </h4>
+                </div>
+                <div class="card-body p-4">
+                    <div class="row">
+                        <div class="col-md-3 text-center mb-4">
+                            <div class="category-badge mx-auto mb-3" style="background-color: #007bff20; color: #007bff; font-size: 4rem; width: 120px; height: 120px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <h5>{{ user.username }}</h5>
+                            <p class="text-muted small">Miembro desde {{ user.date_joined|date:"F Y" }}</p>
+                        </div>
+                        <div class="col-md-9">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label fw-bold">Nombre de Usuario</label>
+                                        <div class="form-control-plaintext">{{ user.username }}</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label fw-bold">Email</label>
+                                        <div class="form-control-plaintext">{{ user.email|default:"No especificado" }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label fw-bold">Fecha de Registro</label>
+                                        <div class="form-control-plaintext">{{ user.date_joined|date:"d/m/Y H:i" }}</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label fw-bold">Último Acceso</label>
+                                        <div class="form-control-plaintext">{{ user.last_login|date:"d/m/Y H:i"|default:"Nunca" }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label fw-bold">Estado de la Cuenta</label>
+                                        <div class="form-control-plaintext">
+                                            {% if user.is_active %}
+                                                <span class="badge bg-success">Activa</span>
+                                            {% else %}
+                                                <span class="badge bg-danger">Inactiva</span>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label fw-bold">Tipo de Usuario</label>
+                                        <div class="form-control-plaintext">
+                                            {% if user.is_staff %}
+                                                <span class="badge bg-warning">Administrador</span>
+                                            {% else %}
+                                                <span class="badge bg-primary">Usuario</span>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <hr>
+                    
+                    <div class="d-flex justify-content-between">
+                        <a href="{% url 'accounts:change_password' %}" class="btn btn-primary">
+                            <i class="fas fa-key me-2"></i>Cambiar Contraseña
+                        </a>
+                        <a href="{% url 'admin:index' %}" class="btn btn-outline-secondary">
+                            <i class="fas fa-cog me-2"></i>Panel de Administración
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Estadísticas rápidas -->
+        <div class="col-lg-4">
+            <div class="card shadow-custom border-radius-custom mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-chart-bar me-2"></i>Estadísticas Rápidas
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row text-center">
+                        <div class="col-6 mb-3">
+                            <div class="h4 text-primary">{{ total_transactions }}</div>
+                            <div class="small text-muted">Transacciones</div>
+                        </div>
+                        <div class="col-6 mb-3">
+                            <div class="h4 text-success">{{ total_categories }}</div>
+                            <div class="small text-muted">Categorías</div>
+                        </div>
+                        <div class="col-6 mb-3">
+                            <div class="h4 text-info">{{ total_budgets }}</div>
+                            <div class="small text-muted">Presupuestos</div>
+                        </div>
+                        <div class="col-6 mb-3">
+                            <div class="h4 text-warning">{{ days_active }}</div>
+                            <div class="small text-muted">Días Activo</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card shadow-custom border-radius-custom">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-trophy me-2"></i>Logros
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <div class="d-flex align-items-center mb-2">
+                            <i class="fas fa-check-circle text-success me-2"></i>
+                            <span class="small">Primera transacción registrada</span>
+                        </div>
+                        {% if total_categories > 5 %}
+                        <div class="d-flex align-items-center mb-2">
+                            <i class="fas fa-check-circle text-success me-2"></i>
+                            <span class="small">Organizador de categorías</span>
+                        </div>
+                        {% endif %}
+                        {% if total_budgets > 0 %}
+                        <div class="d-flex align-items-center mb-2">
+                            <i class="fas fa-check-circle text-success me-2"></i>
+                            <span class="small">Planificador financiero</span>
+                        </div>
+                        {% endif %}
+                        {% if days_active > 30 %}
+                        <div class="d-flex align-items-center mb-2">
+                            <i class="fas fa-check-circle text-success me-2"></i>
+                            <span class="small">Usuario comprometido</span>
+                        </div>
+                        {% endif %}
+                        {% if total_transactions > 50 %}
+                        <div class="d-flex align-items-center mb-2">
+                            <i class="fas fa-check-circle text-success me-2"></i>
+                            <span class="small">Experto en finanzas</span>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Actividad reciente -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card shadow-custom border-radius-custom">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-clock me-2"></i>Actividad Reciente
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% if recent_transactions %}
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Fecha</th>
+                                        <th>Tipo</th>
+                                        <th>Categoría</th>
+                                        <th>Descripción</th>
+                                        <th class="text-end">Monto</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for transaction in recent_transactions %}
+                                    <tr>
+                                        <td>{{ transaction.date|date:"d/m/Y" }}</td>
+                                        <td>
+                                            <span class="badge {% if transaction.is_income %}bg-success{% else %}bg-danger{% endif %}">
+                                                {% translate_type transaction.get_transaction_type_display %}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <span class="category-badge" style="background-color: {{ transaction.category.color }}20; color: {{ transaction.category.color }};">
+                                                    <i class="{{ transaction.category.icon }} category-icon"></i>
+                                                    {{ transaction.category.name }}
+                                                </span>
+                                            </div>
+                                        </td>
+                                        <td>{{ transaction.description|truncatechars:30|default:"Sin descripción" }}</td>
+                                        <td class="text-end">
+                                            <span class="fw-bold {% if transaction.is_income %}text-success{% else %}text-danger{% endif %}">
+                                                {% if transaction.is_income %}+{% else %}-{% endif %}{{ transaction.amount|floatformat:2 }} $
+                                            </span>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="text-center mt-3">
+                            <a href="{% url 'transactions:transaction_list' %}" class="btn btn-outline-primary">
+                                <i class="fas fa-list me-2"></i>Ver Todas las Transacciones
+                            </a>
+                        </div>
+                    {% else %}
+                        <div class="text-center py-4">
+                            <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
+                            <h5 class="text-muted">No hay actividad reciente</h5>
+                            <p class="text-muted">Comienza registrando tu primera transacción</p>
+                            <a href="{% url 'transactions:transaction_create' %}" class="btn btn-primary">
+                                <i class="fas fa-plus me-2"></i>Agregar Transacción
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

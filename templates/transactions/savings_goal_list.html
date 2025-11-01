@@ -1,0 +1,113 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}Metas de Ahorro - Gestor de Finanzas{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <h2><i class="fas fa-piggy-bank me-2"></i>Metas de Ahorro</h2>
+        </div>
+        <div class="col-md-6 text-end">
+            <a href="{% url 'transactions:savings_goal_create' %}" class="btn btn-primary">
+                <i class="fas fa-plus me-2"></i>Nueva Meta
+            </a>
+        </div>
+    </div>
+
+    <!-- Lista de metas -->
+    <div class="row">
+        {% for goal in goals %}
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card h-100 {% if goal.is_achieved %}border-success{% endif %}">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div>
+                            <h5 class="card-title mb-1">
+                                <i class="{{ goal.icon }} me-2" style="color: {{ goal.color }};"></i>{{ goal.name }}
+                            </h5>
+                            {% if goal.is_achieved %}
+                                <span class="badge bg-success">
+                                    <i class="fas fa-trophy me-1"></i>¡Alcanzada!
+                                </span>
+                            {% else %}
+                                <small class="text-muted">{{ goal.days_remaining }} días restantes</small>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    {% if goal.description %}
+                    <p class="text-muted small mb-3">{{ goal.description|truncatechars:80 }}</p>
+                    {% endif %}
+                    
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between mb-1">
+                            <span>Progreso:</span>
+                            <span class="fw-bold">${{ goal.current_amount|floatformat:2 }} / ${{ goal.target_amount|floatformat:2 }}</span>
+                        </div>
+                        <div class="progress" style="height: 25px;">
+                            <div class="progress-bar {% if goal.is_achieved %}bg-success{% else %}bg-info{% endif %}" 
+                                 role="progressbar" 
+                                 style="width: {{ goal.percentage_completed }}%"
+                                 aria-valuenow="{{ goal.percentage_completed }}" 
+                                 aria-valuemax="100">
+                                {{ goal.percentage_completed|floatformat:1 }}%
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-between mt-1">
+                            <small class="text-muted">Restante: ${{ goal.remaining_amount|floatformat:2 }}</small>
+                            {% if not goal.is_achieved and goal.days_remaining > 0 %}
+                                <small class="text-muted">Diario: ${{ goal.daily_saving_needed|floatformat:2 }}</small>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <small class="text-muted">
+                            <i class="fas fa-calendar me-1"></i>Meta: {{ goal.target_date|date:"d/m/Y" }}
+                        </small>
+                    </div>
+                    
+                    {% if not goal.is_achieved %}
+                    <form method="post" action="{% url 'transactions:add_to_savings_goal' goal.pk %}" class="mb-2">
+                        {% csrf_token %}
+                        <div class="input-group input-group-sm">
+                            <input type="number" name="amount" class="form-control" placeholder="Monto" step="0.01" min="0.01" required>
+                            <button type="submit" class="btn btn-success">
+                                <i class="fas fa-plus"></i> Agregar
+                            </button>
+                        </div>
+                    </form>
+                    {% endif %}
+                    
+                    <div class="btn-group w-100">
+                        <a href="{% url 'transactions:savings_goal_update' goal.pk %}" class="btn btn-sm btn-outline-primary">
+                            <i class="fas fa-edit"></i> Editar
+                        </a>
+                        <a href="{% url 'transactions:savings_goal_delete' goal.pk %}" class="btn btn-sm btn-outline-danger">
+                            <i class="fas fa-trash"></i> Eliminar
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body text-center py-5">
+                    <i class="fas fa-piggy-bank fa-3x text-muted mb-3"></i>
+                    <h5 class="text-muted">No hay metas de ahorro</h5>
+                    <p class="text-muted">Comienza creando tu primera meta de ahorro</p>
+                    <a href="{% url 'transactions:savings_goal_create' %}" class="btn btn-primary">
+                        <i class="fas fa-plus me-2"></i>Crear Meta
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+

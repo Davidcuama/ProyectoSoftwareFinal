@@ -1,0 +1,179 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}
+    {% if form.instance.pk %}Editar Transacción{% else %}Nueva Transacción{% endif %} - Gestor de Finanzas
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow-custom border-radius-custom">
+                <div class="card-header">
+                    <h4 class="mb-0">
+                        <i class="fas fa-{% if form.instance.pk %}edit{% else %}plus{% endif %} me-2"></i>
+                        {% if form.instance.pk %}Editar Transacción{% else %}Nueva Transacción{% endif %}
+                    </h4>
+                </div>
+                <div class="card-body p-4">
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        {% if form.errors %}
+                        <div class="alert alert-danger">
+                            <i class="fas fa-exclamation-triangle me-2"></i>
+                            Por favor, corrige los errores siguientes:
+                            <ul class="mb-0 mt-2">
+                                {% for field, errors in form.errors.items %}
+                                    {% for error in errors %}
+                                        <li>{{ error }}</li>
+                                    {% endfor %}
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        {% endif %}
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="{{ form.transaction_type.id_for_label }}" class="form-label">
+                                        <i class="fas fa-exchange-alt me-2"></i>Tipo de Transacción
+                                    </label>
+                                    {{ form.transaction_type }}
+                                    {% if form.transaction_type.errors %}
+                                    <div class="text-danger small">{{ form.transaction_type.errors.0 }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="{{ form.amount.id_for_label }}" class="form-label">
+                                        <i class="fas fa-dollar-sign me-2"></i>Monto
+                                    </label>
+                                    {{ form.amount }}
+                                    {% if form.amount.errors %}
+                                    <div class="text-danger small">{{ form.amount.errors.0 }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="{{ form.date.id_for_label }}" class="form-label">
+                                        <i class="fas fa-calendar me-2"></i>Fecha
+                                    </label>
+                                    {{ form.date }}
+                                    {% if form.date.errors %}
+                                    <div class="text-danger small">{{ form.date.errors.0 }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="{{ form.category.id_for_label }}" class="form-label">
+                                        <i class="fas fa-tag me-2"></i>Categoría
+                                    </label>
+                                    {{ form.category }}
+                                    {% if form.category.errors %}
+                                    <div class="text-danger small">{{ form.category.errors.0 }}</div>
+                                    {% endif %}
+                                    <div class="form-text">
+                                        <a href="{% url 'transactions:category_create' %}" target="_blank" class="small">
+                                            <i class="fas fa-plus me-1"></i>Crear nueva categoría
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="{{ form.description.id_for_label }}" class="form-label">
+                                <i class="fas fa-align-left me-2"></i>Descripción
+                            </label>
+                            {{ form.description }}
+                            {% if form.description.errors %}
+                            <div class="text-danger small">{{ form.description.errors.0 }}</div>
+                            {% endif %}
+                            <div class="form-text">
+                                <i class="fas fa-info-circle me-1"></i>
+                                Opcional. Describe brevemente la transacción.
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="{{ form.tags.id_for_label }}" class="form-label">
+                                <i class="fas fa-bookmark me-2"></i>Etiquetas
+                            </label>
+                            {{ form.tags }}
+                            {% if form.tags.errors %}
+                            <div class="text-danger small">{{ form.tags.errors.0 }}</div>
+                            {% endif %}
+                            <div class="form-text">
+                                <i class="fas fa-info-circle me-1"></i>
+                                Mantén presionado Ctrl (Cmd en Mac) para seleccionar múltiples etiquetas.
+                                <a href="{% url 'transactions:tag_create' %}" target="_blank" class="small ms-2">
+                                    <i class="fas fa-plus me-1"></i>Crear nueva etiqueta
+                                </a>
+                            </div>
+                        </div>
+                        
+                        <div class="d-flex justify-content-between">
+                            <a href="{% url 'transactions:transaction_list' %}" class="btn btn-outline-secondary">
+                                <i class="fas fa-arrow-left me-2"></i>Cancelar
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-2"></i>
+                                {% if form.instance.pk %}Actualizar{% else %}Guardar{% endif %}
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Información adicional -->
+            <div class="card mt-4">
+                <div class="card-body">
+                    <h6 class="card-title">
+                        <i class="fas fa-info-circle me-2"></i>Consejos
+                    </h6>
+                    <ul class="list-unstyled mb-0">
+                        <li><i class="fas fa-check text-success me-2"></i>Agrega descripciones detalladas para recordar el propósito</li>
+                        <li><i class="fas fa-check text-success me-2"></i>Registra las transacciones lo antes posible</li>
+                        <li><i class="fas fa-check text-success me-2"></i>Revisa regularmente tus transacciones</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Cambiar el color del campo de monto según el tipo de transacción
+    document.addEventListener('DOMContentLoaded', function() {
+        const transactionTypeSelect = document.getElementById('{{ form.transaction_type.id_for_label }}');
+        const amountInput = document.getElementById('{{ form.amount.id_for_label }}');
+        
+        function updateAmountColor() {
+            const selectedType = transactionTypeSelect.value;
+            if (selectedType === 'income') {
+                amountInput.style.borderColor = '#198754';
+                amountInput.style.backgroundColor = '#f8fff9';
+            } else if (selectedType === 'expense') {
+                amountInput.style.borderColor = '#dc3545';
+                amountInput.style.backgroundColor = '#fff8f8';
+            } else {
+                amountInput.style.borderColor = '';
+                amountInput.style.backgroundColor = '';
+            }
+        }
+        
+        transactionTypeSelect.addEventListener('change', updateAmountColor);
+        updateAmountColor(); // Aplicar al cargar la página
+    });
+</script>
+{% endblock %}

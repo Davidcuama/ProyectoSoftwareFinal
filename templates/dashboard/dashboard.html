@@ -1,0 +1,352 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% load i18n %}
+{% load translate %}
+
+{% block title %}Dashboard - Gestor de Finanzas{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Estadísticas principales -->
+    <div class="row dashboard-stats fade-in">
+        <div class="col-md-4">
+            <div class="stats-card income">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <div class="stats-label">{% trans_custom "Total Income" %}</div>
+                        <div class="stats-value" id="total-income">{{ total_income|floatformat:2 }} $</div>
+                    </div>
+                    <div class="stats-icon">
+                        <i class="fas fa-arrow-up"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="stats-card expense">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <div class="stats-label">{% trans_custom "Total Expenses" %}</div>
+                        <div class="stats-value" id="total-expenses">{{ total_expenses|floatformat:2 }} $</div>
+                    </div>
+                    <div class="stats-icon">
+                        <i class="fas fa-arrow-down"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="stats-card balance">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <div class="stats-label">{% trans_custom "Net Balance" %}</div>
+                        <div class="stats-value" id="balance">{{ balance|floatformat:2 }} $</div>
+                    </div>
+                    <div class="stats-icon">
+                        <i class="fas fa-wallet"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Gráfico principal -->
+    <div class="row fade-in">
+        <div class="col-12">
+            <div class="chart-container">
+                <div class="chart-title">
+                    <i class="fas fa-chart-pie me-2"></i>{% trans_custom "Expenses" %}
+                </div>
+                <div style="height: 400px; position: relative;">
+                    <canvas id="monthly-chart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Transacciones Recientes -->
+    <div class="row fade-in">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-clock me-2"></i>{% trans_custom "Recent Transactions" %}
+                </div>
+                <div class="card-body">
+                    {% if recent_transactions %}
+                        {% for transaction in recent_transactions %}
+                        <div class="transaction-item {% if transaction.is_income %}income{% else %}expense{% endif %}">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <div class="fw-bold">{{ transaction.description|truncatechars:50|default:"No description" }}</div>
+                                    <div class="small text-muted">
+                                        {{ transaction.date|date:"d/m/Y" }} - {% translate_type transaction.get_transaction_type_display %}
+                                        {% if transaction.category %}
+                                            - <span class="badge" style="background-color: {{ transaction.category.color }}; font-size: 0.7rem;">
+                                                <i class="{{ transaction.category.icon }} me-1"></i>{{ transaction.category.name }}
+                                            </span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="text-end">
+                                    <div class="transaction-amount {% if transaction.is_income %}income{% else %}expense{% endif %}">
+                                        {% if transaction.is_income %}+{% else %}-{% endif %}{{ transaction.amount|floatformat:2 }} $
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                        <div class="text-center mt-3">
+                            <a href="{% url 'transactions:transaction_list' %}" class="btn btn-outline-primary btn-sm">
+                                <i class="fas fa-list me-1"></i>{% trans_custom "View All Transactions" %}
+                            </a>
+                        </div>
+                    {% else %}
+                        <p class="text-muted text-center py-3">
+                            <i class="fas fa-info-circle me-2"></i>{% trans_custom "No transactions registered" %}
+                            <br>
+                            <a href="{% url 'transactions:transaction_create' %}" class="btn btn-sm btn-primary mt-2">
+                                <i class="fas fa-plus me-1"></i>{% trans_custom "Add Transaction" %}
+                            </a>
+                        </p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Estadísticas del Mes -->
+    <div class="row fade-in mb-4">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h6 class="text-muted mb-2">{% trans_custom "Month Income" %}</h6>
+                    <h3 class="text-success mb-0">{{ month_income|floatformat:2 }} $</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h6 class="text-muted mb-2">{% trans_custom "Month Expenses" %}</h6>
+                    <h3 class="text-danger mb-0">{{ month_expenses|floatformat:2 }} $</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h6 class="text-muted mb-2">{% trans_custom "Month Balance" %}</h6>
+                    <h3 class="{% if month_balance >= 0 %}text-success{% else %}text-danger{% endif %} mb-0">
+                        {{ month_balance|floatformat:2 }} $
+                    </h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Presupuestos del Mes -->
+    {% if current_budgets %}
+    <div class="row fade-in mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-chart-pie me-2"></i>{% trans_custom "Current Month Budgets" %}
+                    <a href="{% url 'transactions:budget_list' %}" class="float-end btn btn-sm btn-outline-light">
+                        {% trans_custom "View All" %}
+                    </a>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        {% for budget in current_budgets|slice:":6" %}
+                        <div class="col-md-6 col-lg-4 mb-3">
+                            <div class="border rounded p-3 {% if budget.is_over_budget %}border-danger{% elif budget.percentage_used > 80 %}border-warning{% endif %}">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <strong>
+                                        <span class="badge" style="background-color: {{ budget.category.color }};">
+                                            <i class="{{ budget.category.icon }} me-1"></i>{{ budget.category.name }}
+                                        </span>
+                                    </strong>
+                                    <small class="text-muted">{{ budget.percentage_used|floatformat:1 }}%</small>
+                                </div>
+                                <div class="progress mb-2" style="height: 20px;">
+                                    <div class="progress-bar {% if budget.is_over_budget %}bg-danger{% elif budget.percentage_used > 80 %}bg-warning{% else %}bg-success{% endif %}" 
+                                         style="width: {% if budget.percentage_used > 100 %}100{% else %}{{ budget.percentage_used }}{% endif %}%">
+                                    </div>
+                                </div>
+                                <small class="text-muted">${{ budget.spent|floatformat:2 }} / ${{ budget.amount|floatformat:2 }}</small>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Metas de Ahorro Activas -->
+    {% if active_savings_goals %}
+    <div class="row fade-in mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-piggy-bank me-2"></i>{% trans_custom "Active Savings Goals" %}
+                    <a href="{% url 'transactions:savings_goal_list' %}" class="float-end btn btn-sm btn-outline-light">
+                        {% trans_custom "View All" %}
+                    </a>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        {% for goal in active_savings_goals %}
+                        <div class="col-md-6 col-lg-4 mb-3">
+                            <div class="border rounded p-3">
+                                <div class="d-flex align-items-center mb-2">
+                                    <i class="{{ goal.icon }} me-2" style="color: {{ goal.color }}; font-size: 1.5rem;"></i>
+                                    <div>
+                                        <strong>{{ goal.name }}</strong>
+                                        <br><small class="text-muted">{{ goal.days_remaining }} {% trans_custom "days remaining" %}</small>
+                                    </div>
+                                </div>
+                                <div class="progress mb-2" style="height: 25px;">
+                                    <div class="progress-bar bg-info" style="width: {{ goal.percentage_completed }}%">
+                                        {{ goal.percentage_completed|floatformat:1 }}%
+                                    </div>
+                                </div>
+                                <small class="text-muted">
+                                    ${{ goal.current_amount|floatformat:2 }} / ${{ goal.target_amount|floatformat:2 }}
+                                </small>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Transacciones Recurrentes Próximas -->
+    {% if upcoming_recurring %}
+    <div class="row fade-in mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-sync-alt me-2"></i>{% trans_custom "Upcoming Recurring Transactions" %}
+                    <a href="{% url 'transactions:recurring_transaction_list' %}" class="float-end btn btn-sm btn-outline-light">
+                        {% trans_custom "View All" %}
+                    </a>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>{% trans_custom "Name" %}</th>
+                                    <th>{% trans_custom "Type" %}</th>
+                                    <th>{% trans_custom "Amount" %}</th>
+                                    <th>{% trans_custom "Next Occurrence" %}</th>
+                                    <th>{% trans_custom "Actions" %}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for recurring in upcoming_recurring %}
+                                <tr>
+                                    <td>{{ recurring.name }}</td>
+                                    <td>
+                                        <span class="badge {% if recurring.transaction_type == 'income' %}bg-success{% else %}bg-danger{% endif %}">
+                                            {% translate_type recurring.get_transaction_type_display %}
+                                        </span>
+                                    </td>
+                                    <td class="fw-bold {% if recurring.transaction_type == 'income' %}text-success{% else %}text-danger{% endif %}">
+                                        {% if recurring.transaction_type == 'income' %}+{% else %}-{% endif %}${{ recurring.amount|floatformat:2 }}
+                                    </td>
+                                    <td>{{ recurring.next_occurrence|date:"d/m/Y" }}</td>
+                                    <td>
+                                        {% if recurring.next_occurrence <= today %}
+                                        <a href="{% url 'transactions:process_recurring_transaction' recurring.pk %}" 
+                                           class="btn btn-sm btn-success">
+                                            <i class="fas fa-play me-1"></i>{% trans_custom "Process" %}
+                                        </a>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Acciones rápidas -->
+    <div class="row fade-in">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-bolt me-2"></i>{% trans_custom "Quick Actions" %}
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3 col-sm-6 mb-3">
+                            <a href="{% url 'transactions:transaction_create' %}" class="btn btn-primary w-100">
+                                <i class="fas fa-plus me-2"></i>{% trans_custom "New Transaction" %}
+                            </a>
+                        </div>
+                        <div class="col-md-3 col-sm-6 mb-3">
+                            <a href="{% url 'transactions:budget_create' %}" class="btn btn-info w-100">
+                                <i class="fas fa-chart-pie me-2"></i>{% trans_custom "New Budget" %}
+                            </a>
+                        </div>
+                        <div class="col-md-3 col-sm-6 mb-3">
+                            <a href="{% url 'transactions:savings_goal_create' %}" class="btn btn-success w-100">
+                                <i class="fas fa-piggy-bank me-2"></i>{% trans_custom "New Goal" %}
+                            </a>
+                        </div>
+                        <div class="col-md-3 col-sm-6 mb-3">
+                            <a href="{% url 'transactions:recurring_transaction_create' %}" class="btn btn-warning w-100">
+                                <i class="fas fa-sync-alt me-2"></i>{% trans_custom "New Recurring" %}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Datos para gráficos -->
+<script id="chart-data" type="application/json">
+{{ chart_data|safe }}
+</script>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Actualizar estadísticas en tiempo real
+    function updateDashboardStats() {
+        fetch('{% url "dashboard:dashboard_stats_api" %}')
+            .then(response => response.json())
+            .then(data => {
+                const totalIncomeEl = document.getElementById('total-income');
+                const totalExpensesEl = document.getElementById('total-expenses');
+                const balanceEl = document.getElementById('balance');
+                
+                if (totalIncomeEl && data.month_income !== undefined) {
+                    totalIncomeEl.textContent = data.month_income.toFixed(2) + ' $';
+                }
+                if (totalExpensesEl && data.month_expenses !== undefined) {
+                    totalExpensesEl.textContent = data.month_expenses.toFixed(2) + ' $';
+                }
+                if (balanceEl && data.month_balance !== undefined) {
+                    balanceEl.textContent = data.month_balance.toFixed(2) + ' $';
+                }
+            })
+            .catch(error => console.error('Error actualizando estadísticas:', error));
+    }
+
+    // Actualizar cada 30 segundos
+    setInterval(updateDashboardStats, 30000);
+</script>
+{% endblock %}

@@ -1,0 +1,98 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}Presupuestos - Gestor de Finanzas{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <h2><i class="fas fa-chart-pie me-2"></i>Presupuestos</h2>
+        </div>
+        <div class="col-md-6 text-end">
+            <a href="{% url 'transactions:budget_create' %}" class="btn btn-primary">
+                <i class="fas fa-plus me-2"></i>Nuevo Presupuesto
+            </a>
+        </div>
+    </div>
+
+    <!-- Lista de presupuestos -->
+    <div class="row">
+        {% for budget in budgets %}
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card h-100 {% if budget.is_over_budget %}border-danger{% elif budget.percentage_used > 80 %}border-warning{% endif %}">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div>
+                            <h5 class="card-title mb-1">
+                                <span class="badge" style="background-color: {{ budget.category.color }};">
+                                    <i class="{{ budget.category.icon }} me-1"></i>{{ budget.category.name }}
+                                </span>
+                            </h5>
+                            <small class="text-muted">{{ budget.month|date:"F Y" }}</small>
+                        </div>
+                        {% if budget.is_over_budget %}
+                            <span class="badge bg-danger">
+                                <i class="fas fa-exclamation-triangle me-1"></i>Excedido
+                            </span>
+                        {% elif budget.percentage_used > 80 %}
+                            <span class="badge bg-warning text-dark">
+                                <i class="fas fa-exclamation-circle me-1"></i>Cerca
+                            </span>
+                        {% else %}
+                            <span class="badge bg-success">
+                                <i class="fas fa-check me-1"></i>Bien
+                            </span>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between mb-1">
+                            <span>Gastado:</span>
+                            <span class="fw-bold">${{ budget.spent|floatformat:2 }} / ${{ budget.amount|floatformat:2 }}</span>
+                        </div>
+                        <div class="progress" style="height: 20px;">
+                            <div class="progress-bar {% if budget.is_over_budget %}bg-danger{% elif budget.percentage_used > 80 %}bg-warning{% else %}bg-success{% endif %}" 
+                                 role="progressbar" 
+                                 style="width: {% if budget.percentage_used > 100 %}100{% else %}{{ budget.percentage_used }}{% endif %}%"
+                                 aria-valuenow="{{ budget.percentage_used }}" 
+                                 aria-valuemin="0" 
+                                 aria-valuemax="100">
+                                {{ budget.percentage_used|floatformat:1 }}%
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-between mt-1">
+                            <small class="text-muted">Restante: ${{ budget.remaining|floatformat:2 }}</small>
+                        </div>
+                    </div>
+                    
+                    <div class="btn-group w-100">
+                        <a href="{% url 'transactions:budget_update' budget.pk %}" class="btn btn-sm btn-outline-primary">
+                            <i class="fas fa-edit"></i> Editar
+                        </a>
+                        <a href="{% url 'transactions:budget_delete' budget.pk %}" class="btn btn-sm btn-outline-danger">
+                            <i class="fas fa-trash"></i> Eliminar
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body text-center py-5">
+                    <i class="fas fa-chart-pie fa-3x text-muted mb-3"></i>
+                    <h5 class="text-muted">No hay presupuestos</h5>
+                    <p class="text-muted">Comienza creando tu primer presupuesto mensual</p>
+                    <a href="{% url 'transactions:budget_create' %}" class="btn btn-primary">
+                        <i class="fas fa-plus me-2"></i>Crear Presupuesto
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+

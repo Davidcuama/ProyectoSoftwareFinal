@@ -1,0 +1,133 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% load translate %}
+
+{% block title %}Transacciones Recurrentes - Gestor de Finanzas{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <h2><i class="fas fa-sync-alt me-2"></i>Transacciones Recurrentes</h2>
+        </div>
+        <div class="col-md-6 text-end">
+            <a href="{% url 'transactions:recurring_transaction_create' %}" class="btn btn-primary">
+                <i class="fas fa-plus me-2"></i>Nueva Recurrente
+            </a>
+        </div>
+    </div>
+
+    <!-- Lista de transacciones recurrentes -->
+    <div class="card">
+        <div class="card-header">
+            <i class="fas fa-list me-2"></i>Lista de Transacciones Recurrentes
+        </div>
+        <div class="card-body p-0">
+            {% if recurring_transactions %}
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Tipo</th>
+                            <th>Categoría</th>
+                            <th>Monto</th>
+                            <th>Frecuencia</th>
+                            <th>Próxima Ocurrencia</th>
+                            <th>Estado</th>
+                            <th class="text-center">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for recurring in recurring_transactions %}
+                        <tr>
+                            <td>
+                                <strong>{{ recurring.name }}</strong>
+                                {% if recurring.description %}
+                                    <br><small class="text-muted">{{ recurring.description|truncatechars:40 }}</small>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <span class="badge {% if recurring.transaction_type == 'income' %}bg-success{% else %}bg-danger{% endif %}">
+                                    {% translate_type recurring.get_transaction_type_display %}
+                                </span>
+                            </td>
+                            <td>
+                                {% if recurring.category %}
+                                    <span class="badge" style="background-color: {{ recurring.category.color }};">
+                                        <i class="{{ recurring.category.icon }} me-1"></i>{{ recurring.category.name }}
+                                    </span>
+                                {% else %}
+                                    <span class="text-muted">-</span>
+                                {% endif %}
+                            </td>
+                            <td class="fw-bold {% if recurring.transaction_type == 'income' %}text-success{% else %}text-danger{% endif %}">
+                                {% if recurring.transaction_type == 'income' %}+{% else %}-{% endif %}${{ recurring.amount|floatformat:2 }}
+                            </td>
+                            <td>{{ recurring.get_frequency_display }}</td>
+                            <td>
+                                {{ recurring.next_occurrence|date:"d/m/Y" }}
+                                {% if recurring.next_occurrence <= today %}
+                                    <span class="badge bg-warning text-dark ms-1">
+                                        <i class="fas fa-clock me-1"></i>Pendiente
+                                    </span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if recurring.is_active %}
+                                    <span class="badge bg-success">
+                                        <i class="fas fa-check-circle me-1"></i>Activa
+                                    </span>
+                                {% else %}
+                                    <span class="badge bg-secondary">
+                                        <i class="fas fa-pause-circle me-1"></i>Inactiva
+                                    </span>
+                                {% endif %}
+                            </td>
+                            <td class="text-center">
+                                <div class="btn-group btn-group-sm">
+                                    {% if recurring.is_active and recurring.next_occurrence <= today %}
+                                    <a href="{% url 'transactions:process_recurring_transaction' recurring.pk %}" 
+                                       class="btn btn-sm btn-success" 
+                                       title="Procesar">
+                                        <i class="fas fa-play"></i>
+                                    </a>
+                                    {% endif %}
+                                    <a href="{% url 'transactions:toggle_recurring_transaction' recurring.pk %}" 
+                                       class="btn btn-sm btn-outline-warning" 
+                                       title="{% if recurring.is_active %}Desactivar{% else %}Activar{% endif %}">
+                                        <i class="fas fa-{% if recurring.is_active %}pause{% else %}play{% endif %}"></i>
+                                    </a>
+                                    <a href="{% url 'transactions:recurring_transaction_update' recurring.pk %}" 
+                                       class="btn btn-sm btn-outline-primary" 
+                                       title="Editar">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <a href="{% url 'transactions:recurring_transaction_delete' recurring.pk %}" 
+                                       class="btn btn-sm btn-outline-danger" 
+                                       title="Eliminar">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="text-center py-5">
+                <i class="fas fa-sync-alt fa-3x text-muted mb-3"></i>
+                <h5 class="text-muted">No hay transacciones recurrentes</h5>
+                <p class="text-muted">Comienza creando tu primera transacción recurrente</p>
+                <a href="{% url 'transactions:recurring_transaction_create' %}" class="btn btn-primary">
+                    <i class="fas fa-plus me-2"></i>Crear Transacción Recurrente
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
