@@ -166,3 +166,10 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticated',
     ],
 }
+
+# External Service Configuration
+# Configurar la URL del servicio del equipo precedente aquí
+# Ejemplo: "https://api-equipo-previo.example.com/api/"
+EXTERNAL_SERVICE_BASE_URL = None  # Cambiar por la URL real cuando la tengas
+# Ejemplo:
+# EXTERNAL_SERVICE_BASE_URL = "https://api-equipo-previo.herokuapp.com/api/"

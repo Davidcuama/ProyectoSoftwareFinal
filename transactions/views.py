@@ -17,6 +17,9 @@ from .forms import (
     TransactionForm, CategoryForm, TagForm, BudgetForm, 
     SavingsGoalForm, RecurringTransactionForm
 )
+from .services import ExchangeRateService, FreeWeatherService
+# Importar vista externa (se importa al final para evitar dependencias circulares)
+# from .external_views import external_items_view
 
 
 class TransactionListView(LoginRequiredMixin, ListView):
@@ -167,6 +170,47 @@ def export_transactions(request):
         ])
     
     return response
+
+
+@login_required
+def export_report(request, format_type='pdf'):
+    """
+    Vista para generar reportes en PDF o Excel usando Inversión de Dependencias.
+    format_type: 'pdf' o 'excel'
+    """
+    from .report_generators import ReportGeneratorFactory
+    
+    # Obtener transacciones del usuario con filtros opcionales
+    queryset = Transaction.objects.filter(user=request.user).select_related('category').order_by('-date')
+    
+    # Aplicar filtros si existen
+    transaction_type = request.GET.get('type')
+    date_from = request.GET.get('date_from')
+    date_to = request.GET.get('date_to')
+    category_id = request.GET.get('category')
+    
+    if transaction_type:
+        queryset = queryset.filter(transaction_type=transaction_type)
+    if date_from:
+        queryset = queryset.filter(date__gte=date_from)
+    if date_to:
+        queryset = queryset.filter(date__lte=date_to)
+    if category_id:
+        queryset = queryset.filter(category_id=category_id)
+    
+    try:
+        # Usar Factory para obtener el generador correcto (Inversión de Dependencias)
+        generator = ReportGeneratorFactory.get_generator(format_type)
+        
+        # Generar nombre del archivo
+        from django.utils import timezone
+        filename = f"reporte_transacciones_{timezone.now().strftime('%Y%m%d_%H%M%S')}"
+        
+        # Generar el reporte
+        return generator.generate(queryset, filename)
+    except ValueError as e:
+        messages.error(request, f"Error: {str(e)}")
+        return redirect('transactions:transaction_list')
 
 
 @login_required

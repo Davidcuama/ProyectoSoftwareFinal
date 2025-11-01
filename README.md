@@ -2,9 +2,9 @@
 
 Una aplicación web completa para gestionar finanzas personales desarrollada con Django 5. Permite a los usuarios registrar ingresos y gastos, crear categorías personalizadas, establecer presupuestos mensuales y visualizar estadísticas con gráficos interactivos.
 
-## 🚀 Características
+## Características
 
-### ✅ Funcionalidades Implementadas
+### Funcionalidades Implementadas
 
 - **Autenticación de Usuarios**
   - Registro de nuevos usuarios
@@ -47,7 +47,7 @@ Una aplicación web completa para gestionar finanzas personales desarrollada con
   - Modo oscuro (opcional)
   - Interfaz intuitiva y fácil de usar
 
-## 🛠️ Tecnologías Utilizadas
+## Tecnologías Utilizadas
 
 - **Backend**: Django 5.0
 - **Frontend**: Bootstrap 5, Chart.js, Font Awesome
@@ -56,13 +56,13 @@ Una aplicación web completa para gestionar finanzas personales desarrollada con
 - **Gráficos**: Chart.js
 - **Exportación**: django-import-export, pandas
 
-## 📋 Requisitos Previos
+## Requisitos Previos
 
 - Python 3.8 o superior
 - pip (gestor de paquetes de Python)
 - Git (opcional, para clonar el repositorio)
 
-## 🔧 Instalación
+## Instalación
 
 ### 1. Clonar el Repositorio
 
@@ -108,9 +108,22 @@ python manage.py createsuperuser
 python manage.py runserver
 ```
 
-La aplicación estará disponible en `http://127.0.0.1:8000/`
+La aplicación estará disponible en `http://127.0.0.1:8000/` o `http://localhost:8000/`
 
-## 📁 Estructura del Proyecto
+**Pasos para probar:**
+1. Abre tu navegador y ve a `http://localhost:8000/`
+2. Crea una cuenta o inicia sesión
+3. Explora las funcionalidades:
+   - Dashboard con estadísticas
+   - Gestión de transacciones
+   - Presupuestos y metas de ahorro
+   - Categorías y etiquetas
+
+**Para probar el servicio externo:**
+- Visita: `http://localhost:8000/transactions/external-items/`
+- Si no está configurada la URL del equipo precedente, verás datos de prueba automáticamente
+
+## Estructura del Proyecto
 
 ```
 Django-Finanzas/
@@ -143,7 +156,7 @@ Django-Finanzas/
 └── README.md             # Este archivo
 ```
 
-## 🎯 Uso de la Aplicación
+## Uso de la Aplicación
 
 ### 1. Registro e Inicio de Sesión
 
@@ -209,7 +222,7 @@ Al registrarte, se crearán automáticamente categorías por defecto:
    - Selecciona el mes deseado
    - Visualiza estadísticas detalladas por categoría
 
-## 🔧 Configuración Avanzada
+## Configuración Avanzada
 
 ### Cambiar Base de Datos (Producción)
 
@@ -246,7 +259,25 @@ DEBUG=False
 ALLOWED_HOSTS=tu-dominio.com
 ```
 
-## 🐛 Solución de Problemas
+### Configurar Servicio Externo del Equipo Precedente
+
+Para consumir el servicio del equipo precedente (Entregable 2):
+
+**Dónde configurar:** `finance/settings.py` línea 173
+
+```python
+# External Service Configuration
+EXTERNAL_SERVICE_BASE_URL = "https://url-del-equipo-precedente.com/api/"
+```
+
+**Ejemplo:**
+```python
+EXTERNAL_SERVICE_BASE_URL = "https://equipo-anterior.herokuapp.com/api/"
+```
+
+**Nota:** Si no tienes la URL aún, déjala en `None`. La aplicación usará datos de prueba automáticamente en modo desarrollo.
+
+## Solución de Problemas
 
 ### Error de Migraciones
 
@@ -274,41 +305,21 @@ python manage.py migrate
 python manage.py createsuperuser
 ```
 
-## 📈 Próximas Mejoras
+## Próximas Mejoras
 
-- [ ] Notificaciones por email
-- [ ] API REST completa
-- [ ] Aplicación móvil
-- [ ] Integración con bancos
-- [ ] Análisis predictivo de gastos
-- [ ] Múltiples monedas
-- [ ] Backup automático
-- [ ] Modo offline
+- Notificaciones por email
+- API REST completa
+- Aplicación móvil
+- Integración con bancos
+- Análisis predictivo de gastos
+- Múltiples monedas
+- Backup automático
+- Modo offline
 
-## 🤝 Contribuir
+## Contribuir
 
 1. Fork el proyecto
 2. Crea una rama para tu feature (`git checkout -b feature/AmazingFeature`)
 3. Commit tus cambios (`git commit -m 'Add some AmazingFeature'`)
 4. Push a la rama (`git push origin feature/AmazingFeature`)
 5. Abre un Pull Request
-
-## 📄 Licencia
-
-Este proyecto está bajo la Licencia MIT. Ver el archivo `LICENSE` para más detalles.
-
-## 👨‍💻 Autor
-
-Desarrollado como proyecto de gestión de finanzas personales con Django.
-
-## 📞 Soporte
-
-Si tienes alguna pregunta o problema, por favor:
-
-1. Revisa la documentación
-2. Busca en los issues existentes
-3. Crea un nuevo issue con detalles del problema
-
----
-
-¡Gracias por usar el Gestor de Finanzas Personales! 🎉

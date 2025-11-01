@@ -9,6 +9,7 @@ import json
 from django.http import JsonResponse
 
 from transactions.models import Transaction, Category, Budget, SavingsGoal, RecurringTransaction
+from transactions.services import ExchangeRateService, FreeWeatherService
 
 
 class DashboardView(LoginRequiredMixin, TemplateView):
@@ -95,6 +96,11 @@ class DashboardView(LoginRequiredMixin, TemplateView):
         from django.utils import timezone as tz
         today = tz.now().date()
         
+        # Obtener información de servicios externos
+        weather_data = FreeWeatherService.get_weather_simple("Medellin")
+        exchange_rates = ExchangeRateService.get_exchange_rates()
+        usd_to_cop = ExchangeRateService.get_currency_rate('COP') if exchange_rates else None
+        
         context.update({
             'total_income': total_income,
             'total_expenses': total_expenses,
@@ -109,6 +115,8 @@ class DashboardView(LoginRequiredMixin, TemplateView):
             'category_expenses': category_expenses,
             'chart_data': json.dumps(chart_data),
             'today': today,
+            'weather_data': weather_data,
+            'usd_to_cop': usd_to_cop,
         })
         
         return context

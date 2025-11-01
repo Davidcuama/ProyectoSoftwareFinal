@@ -6,6 +6,11 @@
 {% endblock %}
 
 {% block content %}
+{% block breadcrumbs_items %}
+<li class="breadcrumb-item"><a href="{% url 'transactions:transaction_list' %}">{% trans_custom "Transactions" %}</a></li>
+<li class="breadcrumb-item active">{% if form.instance.pk %}{% trans_custom "Edit Transaction" %}{% else %}{% trans_custom "New Transaction" %}{% endif %}</li>
+{% endblock %}
+
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8 col-lg-6">

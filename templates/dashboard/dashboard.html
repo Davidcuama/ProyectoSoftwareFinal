@@ -6,6 +6,10 @@
 {% block title %}Dashboard - Gestor de Finanzas{% endblock %}
 
 {% block content %}
+{% block breadcrumbs_items %}
+<li class="breadcrumb-item active">{% trans_custom "Dashboard" %}</li>
+{% endblock %}
+
 <div class="container-fluid">
     <!-- Estadísticas principales -->
     <div class="row dashboard-stats fade-in">

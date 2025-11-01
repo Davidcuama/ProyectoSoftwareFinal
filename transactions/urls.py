@@ -1,5 +1,6 @@
 from django.urls import path
 from . import views
+from .external_views import external_items_view
 
 app_name = 'transactions'
 
@@ -12,6 +13,7 @@ urlpatterns = [
     
     # Exportación y API
     path('export/', views.export_transactions, name='export_transactions'),
+    path('export/<str:format_type>/', views.export_report, name='export_report'),
     path('api/stats/', views.transaction_stats_api, name='transaction_stats_api'),
     
     # Categorías
@@ -46,4 +48,7 @@ urlpatterns = [
     path('recurring/<int:pk>/delete/', views.RecurringTransactionDeleteView.as_view(), name='recurring_transaction_delete'),
     path('recurring/<int:recurring_id>/process/', views.process_recurring_transactions, name='process_recurring_transaction'),
     path('recurring/<int:recurring_id>/toggle/', views.toggle_recurring_transaction, name='toggle_recurring_transaction'),
+    
+    # Servicios externos (consumo de otros equipos)
+    path('external-items/', external_items_view, name='external_items'),
 ]
