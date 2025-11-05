@@ -24,6 +24,9 @@ TRANSLATIONS = {
         'Administration': 'Administración',
         'Admin Dashboard': 'Panel Admin',
         'Manage Users': 'Gestionar Usuarios',
+        'Finances': 'Finanzas',
+        'Personal Finance Manager': 'Gestor de Finanzas Personales',
+        'All rights reserved': 'Todos los derechos reservados',
         
         # Login/Register
         'Sign In': 'Iniciar Sesión',
@@ -109,6 +112,106 @@ TRANSLATIONS = {
         'Ingreso': 'Ingreso',
         'Gasto': 'Gasto',
         'Ambos': 'Ambos',
+        
+        # Savings Goals
+        'Savings Goals': 'Metas de Ahorro',
+        'New Goal': 'Nueva Meta',
+        'Create Goal': 'Crear Meta',
+        'Progress': 'Progreso',
+        'Remaining': 'Restante',
+        'Daily': 'Diario',
+        'Goal': 'Meta',
+        'Amount': 'Monto',
+        'Add': 'Agregar',
+        'Achieved': '¡Alcanzada!',
+        'days remaining': 'días restantes',
+        'No savings goals': 'No hay metas de ahorro',
+        'Start by creating your first savings goal': 'Comienza creando tu primera meta de ahorro',
+        
+        # Budgets
+        'Budgets': 'Presupuestos',
+        'New Budget': 'Nuevo Presupuesto',
+        'Create Budget': 'Crear Presupuesto',
+        'Spent': 'Gastado',
+        'Good': 'Bien',
+        'Close': 'Cerca',
+        'Exceeded': 'Excedido',
+        'No budgets': 'No hay presupuestos',
+        'Start by creating your first monthly budget': 'Comienza creando tu primer presupuesto mensual',
+        
+        # Recurring Transactions
+        'Recurring Transactions': 'Transacciones Recurrentes',
+        'New Recurring Transaction': 'Nueva Recurrente',
+        'Recurring Transactions List': 'Lista de Transacciones Recurrentes',
+        'Create Recurring Transaction': 'Crear Transacción Recurrente',
+        'No recurring transactions': 'No hay transacciones recurrentes',
+        'Start by creating your first recurring transaction': 'Comienza creando tu primera transacción recurrente',
+        'Are you sure you want to delete the category': '¿Estás seguro de que deseas eliminar la categoría',
+        'Are you sure you want to delete the budget for': '¿Estás seguro de que deseas eliminar el presupuesto de',
+        'for': 'para',
+        'Are you sure you want to delete the savings goal': '¿Estás seguro de que deseas eliminar la meta de ahorro',
+        'Are you sure you want to delete the tag': '¿Estás seguro de que deseas eliminar la etiqueta',
+        'Are you sure you want to delete the recurring transaction': '¿Estás seguro de que deseas eliminar la transacción recurrente',
+        'Transactions using this category will remain, but will lose their assigned category.': 'Las transacciones que usan esta categoría seguirán existiendo, pero perderán la categoría asignada.',
+        'Generated transactions will not be deleted.': 'Las transacciones ya generadas no se eliminarán.',
+        
+        # Profile
+        'My Profile': 'Mi Perfil',
+        'Member since': 'Miembro desde',
+        'Last Access': 'Último Acceso',
+        'Active Days': 'Días Activo',
+        'First transaction registered': 'Primera transacción registrada',
+        'Category organizer': 'Organizador de categorías',
+        'Start by registering your first transaction': 'Comienza registrando tu primera transacción',
+        
+        # Finance Manager
+        'Finance Manager': 'Gestor de Finanzas',
+        
+        # Delete confirmations
+        'Delete Transaction': 'Eliminar Transacción',
+        'Delete Category': 'Eliminar Categoría',
+        'Delete Budget': 'Eliminar Presupuesto',
+        'Delete Savings Goal': 'Eliminar Meta de Ahorro',
+        'Delete Tag': 'Eliminar Etiqueta',
+        'Delete Recurring Transaction': 'Eliminar Transacción Recurrente',
+        
+        # Form labels
+        'Transaction Type': 'Tipo de Transacción',
+        'Date': 'Fecha',
+        'Month': 'Mes',
+        'Budget Amount': 'Monto del Presupuesto',
+        'Target Amount': 'Monto Objetivo',
+        'Target Date': 'Fecha Objetivo',
+        'Start Date': 'Fecha de Inicio',
+        'End Date (Optional)': 'Fecha de Fin (Opcional)',
+        'Icon': 'Icono',
+        'Select Icon Visually': 'Seleccionar Icono Visualmente',
+        'Preview': 'Vista previa',
+        'Name': 'Nombre',
+        
+        # Form messages
+        'Please correct the following errors:': 'Por favor, corrige los errores siguientes:',
+        'Optional. Briefly describe the transaction.': 'Opcional. Describe brevemente la transacción.',
+        'Hold Ctrl (Cmd on Mac) to select multiple tags.': 'Mantén presionado Ctrl (Cmd en Mac) para seleccionar múltiples etiquetas.',
+        'Create new category': 'Crear nueva categoría',
+        'Create new tag': 'Crear nueva etiqueta',
+        'Leave blank if the transaction has no end date.': 'Deja en blanco si la transacción no tiene fecha de finalización.',
+        
+        # Tips and advice
+        'Tips': 'Consejos',
+        'Add detailed descriptions to remember the purpose': 'Agrega descripciones detalladas para recordar el propósito',
+        'Record transactions as soon as possible': 'Registra las transacciones lo antes posible',
+        'Review your transactions regularly': 'Revisa regularmente tus transacciones',
+        'Use a unique password for this application': 'Usa una contraseña única para esta aplicación',
+        'Combine letters, numbers and symbols': 'Combina letras, números y símbolos',
+        'View your finances with charts': 'Visualiza tus finanzas con gráficos',
+        
+        # Edit forms
+        'Edit Transaction': 'Editar Transacción',
+        'Edit Budget': 'Editar Presupuesto',
+        'Edit Category': 'Editar Categoría',
+        'Edit Recurring Transaction': 'Editar Transacción Recurrente',
+        'Update': 'Actualizar',
     },
     'en': {
         # Navigation
@@ -132,6 +235,9 @@ TRANSLATIONS = {
         'Administration': 'Administration',
         'Admin Dashboard': 'Admin Panel',
         'Manage Users': 'Manage Users',
+        'Finances': 'Finances',
+        'Personal Finance Manager': 'Personal Finance Manager',
+        'All rights reserved': 'All rights reserved',
         
         # Login/Register
         'Sign In': 'Sign In',
@@ -217,6 +323,106 @@ TRANSLATIONS = {
         'Ingreso': 'Income',
         'Gasto': 'Expense',
         'Ambos': 'Both',
+        
+        # Savings Goals
+        'Savings Goals': 'Savings Goals',
+        'New Goal': 'New Goal',
+        'Create Goal': 'Create Goal',
+        'Progress': 'Progress',
+        'Remaining': 'Remaining',
+        'Daily': 'Daily',
+        'Goal': 'Goal',
+        'Amount': 'Amount',
+        'Add': 'Add',
+        'Achieved': 'Achieved!',
+        'days remaining': 'days remaining',
+        'No savings goals': 'No savings goals',
+        'Start by creating your first savings goal': 'Start by creating your first savings goal',
+        
+        # Budgets
+        'Budgets': 'Budgets',
+        'New Budget': 'New Budget',
+        'Create Budget': 'Create Budget',
+        'Spent': 'Spent',
+        'Good': 'Good',
+        'Close': 'Close',
+        'Exceeded': 'Exceeded',
+        'No budgets': 'No budgets',
+        'Start by creating your first monthly budget': 'Start by creating your first monthly budget',
+        
+        # Recurring Transactions
+        'Recurring Transactions': 'Recurring Transactions',
+        'New Recurring Transaction': 'New Recurring',
+        'Recurring Transactions List': 'Recurring Transactions List',
+        'Create Recurring Transaction': 'Create Recurring Transaction',
+        'No recurring transactions': 'No recurring transactions',
+        'Start by creating your first recurring transaction': 'Start by creating your first recurring transaction',
+        'Are you sure you want to delete the category': 'Are you sure you want to delete the category',
+        'Are you sure you want to delete the budget for': 'Are you sure you want to delete the budget for',
+        'for': 'for',
+        'Are you sure you want to delete the savings goal': 'Are you sure you want to delete the savings goal',
+        'Are you sure you want to delete the tag': 'Are you sure you want to delete the tag',
+        'Are you sure you want to delete the recurring transaction': 'Are you sure you want to delete the recurring transaction',
+        'Transactions using this category will remain, but will lose their assigned category.': 'Transactions using this category will remain, but will lose their assigned category.',
+        'Generated transactions will not be deleted.': 'Generated transactions will not be deleted.',
+        
+        # Profile
+        'My Profile': 'My Profile',
+        'Member since': 'Member since',
+        'Last Access': 'Last Access',
+        'Active Days': 'Active Days',
+        'First transaction registered': 'First transaction registered',
+        'Category organizer': 'Category organizer',
+        'Start by registering your first transaction': 'Start by registering your first transaction',
+        
+        # Finance Manager
+        'Finance Manager': 'Finance Manager',
+        
+        # Delete confirmations
+        'Delete Transaction': 'Delete Transaction',
+        'Delete Category': 'Delete Category',
+        'Delete Budget': 'Delete Budget',
+        'Delete Savings Goal': 'Delete Savings Goal',
+        'Delete Tag': 'Delete Tag',
+        'Delete Recurring Transaction': 'Delete Recurring Transaction',
+        
+        # Form labels
+        'Transaction Type': 'Transaction Type',
+        'Date': 'Date',
+        'Month': 'Month',
+        'Budget Amount': 'Budget Amount',
+        'Target Amount': 'Target Amount',
+        'Target Date': 'Target Date',
+        'Start Date': 'Start Date',
+        'End Date (Optional)': 'End Date (Optional)',
+        'Icon': 'Icon',
+        'Select Icon Visually': 'Select Icon Visually',
+        'Preview': 'Preview',
+        'Name': 'Name',
+        
+        # Form messages
+        'Please correct the following errors:': 'Please correct the following errors:',
+        'Optional. Briefly describe the transaction.': 'Optional. Briefly describe the transaction.',
+        'Hold Ctrl (Cmd on Mac) to select multiple tags.': 'Hold Ctrl (Cmd on Mac) to select multiple tags.',
+        'Create new category': 'Create new category',
+        'Create new tag': 'Create new tag',
+        'Leave blank if the transaction has no end date.': 'Leave blank if the transaction has no end date.',
+        
+        # Tips and advice
+        'Tips': 'Tips',
+        'Add detailed descriptions to remember the purpose': 'Add detailed descriptions to remember the purpose',
+        'Record transactions as soon as possible': 'Record transactions as soon as possible',
+        'Review your transactions regularly': 'Review your transactions regularly',
+        'Use a unique password for this application': 'Use a unique password for this application',
+        'Combine letters, numbers and symbols': 'Combine letters, numbers and symbols',
+        'View your finances with charts': 'View your finances with charts',
+        
+        # Edit forms
+        'Edit Transaction': 'Edit Transaction',
+        'Edit Budget': 'Edit Budget',
+        'Edit Category': 'Edit Category',
+        'Edit Recurring Transaction': 'Edit Recurring Transaction',
+        'Update': 'Update',
     }
 }
 

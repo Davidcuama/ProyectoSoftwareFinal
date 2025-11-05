@@ -5,6 +5,25 @@
     {% if form.instance.pk %}Editar Meta de Ahorro{% else %}Nueva Meta de Ahorro{% endif %} - Gestor de Finanzas
 {% endblock %}
 
+{% block extra_css %}
+<style>
+    .icon-select-btn {
+        transition: all 0.2s;
+        border: 2px solid #dee2e6 !important;
+    }
+    .icon-select-btn:hover {
+        transform: scale(1.1);
+        border-color: #0d6efd !important;
+        background-color: #e7f1ff;
+    }
+    .icon-select-btn.active {
+        border-color: #0d6efd !important;
+        background-color: #0d6efd !important;
+        color: white !important;
+    }
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="container">
     <div class="row justify-content-center">
@@ -79,6 +98,12 @@
                                     {% if form.icon.errors %}
                                     <div class="text-danger small">{{ form.icon.errors.0 }}</div>
                                     {% endif %}
+                                    <div class="mt-2">
+                                        <small class="text-muted">Vista previa:</small>
+                                        <div class="mt-1">
+                                            <i id="icon-preview" class="{{ form.icon.value|default:'fas fa-piggy-bank' }} fa-2x" style="color: {{ form.color.value|default:'#28a745' }};"></i>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -90,6 +115,167 @@
                                     {% if form.color.errors %}
                                     <div class="text-danger small">{{ form.color.errors.0 }}</div>
                                     {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Selector visual de iconos -->
+                        <div class="mb-3">
+                            <label class="form-label">
+                                <i class="fas fa-icons me-2"></i>Seleccionar Icono Visualmente
+                            </label>
+                            <div class="icon-selector-grid p-3 border rounded" style="max-height: 200px; overflow-y: auto; background-color: #f8f9fa;">
+                                <div class="row g-2">
+                                    <div class="col-3 col-md-2 col-lg-2">
+                                        <button type="button" class="icon-select-btn btn btn-outline-secondary w-100 p-2" data-icon="fas fa-piggy-bank" title="Alcancía">
+                                            <i class="fas fa-piggy-bank fa-lg"></i>
+                                        </button>
+                                    </div>
+                                    <div class="col-3 col-md-2 col-lg-2">
+                                        <button type="button" class="icon-select-btn btn btn-outline-secondary w-100 p-2" data-icon="fas fa-coins" title="Monedas">
+                                            <i class="fas fa-coins fa-lg"></i>
+                                        </button>
+                                    </div>
+                                    <div class="col-3 col-md-2 col-lg-2">
+                                        <button type="button" class="icon-select-btn btn btn-outline-secondary w-100 p-2" data-icon="fas fa-wallet" title="Billetera">
+                                            <i class="fas fa-wallet fa-lg"></i>
+                                        </button>
+                                    </div>
+                                    <div class="col-3 col-md-2 col-lg-2">
+                                        <button type="button" class="icon-select-btn btn btn-outline-secondary w-100 p-2" data-icon="fas fa-dollar-sign" title="Dólar">
+                                            <i class="fas fa-dollar-sign fa-lg"></i>
+                                        </button>
+                                    </div>
+                                    <div class="col-3 col-md-2 col-lg-2">
+                                        <button type="button" class="icon-select-btn btn btn-outline-secondary w-100 p-2" data-icon="fas fa-money-bill-wave" title="Billete">
+                                            <i class="fas fa-money-bill-wave fa-lg"></i>
+                                        </button>
+                                    </div>
+                                    <div class="col-3 col-md-2 col-lg-2">
+                                        <button type="button" class="icon-select-btn btn btn-outline-secondary w-100 p-2" data-icon="fas fa-gift" title="Regalo">
+                                            <i class="fas fa-gift fa-lg"></i>
+                                        </button>
+                                    </div>
+                                    <div class="col-3 col-md-2 col-lg-2">
+                                        <button type="button" class="icon-select-btn btn btn-outline-secondary w-100 p-2" data-icon="fas fa-home" title="Casa">
+                                            <i class="fas fa-home fa-lg"></i>
+                                        </button>
+                                    </div>
+                                    <div class="col-3 col-md-2 col-lg-2">
+                                        <button type="button" class="icon-select-btn btn btn-outline-secondary w-100 p-2" data-icon="fas fa-car" title="Carro">
+                                            <i class="fas fa-car fa-lg"></i>
+                                        </button>
+                                    </div>
+                                    <div class="col-3 col-md-2 col-lg-2">
+                                        <button type="button" class="icon-select-btn btn btn-outline-secondary w-100 p-2" data-icon="fas fa-plane" title="Avión">
+                                            <i class="fas fa-plane fa-lg"></i>
+                                        </button>
+                                    </div>
+                                    <div class="col-3 col-md-2 col-lg-2">
+                                        <button type="button" class="icon-select-btn btn btn-outline-secondary w-100 p-2" data-icon="fas fa-heart" title="Corazón">
+                                            <i class="fas fa-heart fa-lg"></i>
+                                        </button>
+                                    </div>
+                                    <div class="col-3 col-md-2 col-lg-2">
+                                        <button type="button" class="icon-select-btn btn btn-outline-secondary w-100 p-2" data-icon="fas fa-star" title="Estrella">
+                                            <i class="fas fa-star fa-lg"></i>
+                                        </button>
+                                    </div>
+                                    <div class="col-3 col-md-2 col-lg-2">
+                                        <button type="button" class="icon-select-btn btn btn-outline-secondary w-100 p-2" data-icon="fas fa-trophy" title="Trofeo">
+                                            <i class="fas fa-trophy fa-lg"></i>
+                                        </button>
+                                    </div>
+                                    <div class="col-3 col-md-2 col-lg-2">
+                                        <button type="button" class="icon-select-btn btn btn-outline-secondary w-100 p-2" data-icon="fas fa-graduation-cap" title="Graduación">
+                                            <i class="fas fa-graduation-cap fa-lg"></i>
+                                        </button>
+                                    </div>
+                                    <div class="col-3 col-md-2 col-lg-2">
+                                        <button type="button" class="icon-select-btn btn btn-outline-secondary w-100 p-2" data-icon="fas fa-briefcase" title="Maletín">
+                                            <i class="fas fa-briefcase fa-lg"></i>
+                                        </button>
+                                    </div>
+                                    <div class="col-3 col-md-2 col-lg-2">
+                                        <button type="button" class="icon-select-btn btn btn-outline-secondary w-100 p-2" data-icon="fas fa-laptop" title="Laptop">
+                                            <i class="fas fa-laptop fa-lg"></i>
+                                        </button>
+                                    </div>
+                                    <div class="col-3 col-md-2 col-lg-2">
+                                        <button type="button" class="icon-select-btn btn btn-outline-secondary w-100 p-2" data-icon="fas fa-mobile-alt" title="Celular">
+                                            <i class="fas fa-mobile-alt fa-lg"></i>
+                                        </button>
+                                    </div>
+                                    <div class="col-3 col-md-2 col-lg-2">
+                                        <button type="button" class="icon-select-btn btn btn-outline-secondary w-100 p-2" data-icon="fas fa-camera" title="Cámara">
+                                            <i class="fas fa-camera fa-lg"></i>
+                                        </button>
+                                    </div>
+                                    <div class="col-3 col-md-2 col-lg-2">
+                                        <button type="button" class="icon-select-btn btn btn-outline-secondary w-100 p-2" data-icon="fas fa-gamepad" title="Videojuego">
+                                            <i class="fas fa-gamepad fa-lg"></i>
+                                        </button>
+                                    </div>
+                                    <div class="col-3 col-md-2 col-lg-2">
+                                        <button type="button" class="icon-select-btn btn btn-outline-secondary w-100 p-2" data-icon="fas fa-bicycle" title="Bicicleta">
+                                            <i class="fas fa-bicycle fa-lg"></i>
+                                        </button>
+                                    </div>
+                                    <div class="col-3 col-md-2 col-lg-2">
+                                        <button type="button" class="icon-select-btn btn btn-outline-secondary w-100 p-2" data-icon="fas fa-motorcycle" title="Motocicleta">
+                                            <i class="fas fa-motorcycle fa-lg"></i>
+                                        </button>
+                                    </div>
+                                    <div class="col-3 col-md-2 col-lg-2">
+                                        <button type="button" class="icon-select-btn btn btn-outline-secondary w-100 p-2" data-icon="fas fa-ship" title="Barco">
+                                            <i class="fas fa-ship fa-lg"></i>
+                                        </button>
+                                    </div>
+                                    <div class="col-3 col-md-2 col-lg-2">
+                                        <button type="button" class="icon-select-btn btn btn-outline-secondary w-100 p-2" data-icon="fas fa-music" title="Música">
+                                            <i class="fas fa-music fa-lg"></i>
+                                        </button>
+                                    </div>
+                                    <div class="col-3 col-md-2 col-lg-2">
+                                        <button type="button" class="icon-select-btn btn btn-outline-secondary w-100 p-2" data-icon="fas fa-book" title="Libro">
+                                            <i class="fas fa-book fa-lg"></i>
+                                        </button>
+                                    </div>
+                                    <div class="col-3 col-md-2 col-lg-2">
+                                        <button type="button" class="icon-select-btn btn btn-outline-secondary w-100 p-2" data-icon="fas fa-dumbbell" title="Gimnasio">
+                                            <i class="fas fa-dumbbell fa-lg"></i>
+                                        </button>
+                                    </div>
+                                    <div class="col-3 col-md-2 col-lg-2">
+                                        <button type="button" class="icon-select-btn btn btn-outline-secondary w-100 p-2" data-icon="fas fa-utensils" title="Comida">
+                                            <i class="fas fa-utensils fa-lg"></i>
+                                        </button>
+                                    </div>
+                                    <div class="col-3 col-md-2 col-lg-2">
+                                        <button type="button" class="icon-select-btn btn btn-outline-secondary w-100 p-2" data-icon="fas fa-shopping-bag" title="Compras">
+                                            <i class="fas fa-shopping-bag fa-lg"></i>
+                                        </button>
+                                    </div>
+                                    <div class="col-3 col-md-2 col-lg-2">
+                                        <button type="button" class="icon-select-btn btn btn-outline-secondary w-100 p-2" data-icon="fas fa-gem" title="Gema">
+                                            <i class="fas fa-gem fa-lg"></i>
+                                        </button>
+                                    </div>
+                                    <div class="col-3 col-md-2 col-lg-2">
+                                        <button type="button" class="icon-select-btn btn btn-outline-secondary w-100 p-2" data-icon="fas fa-ring" title="Anillo">
+                                            <i class="fas fa-ring fa-lg"></i>
+                                        </button>
+                                    </div>
+                                    <div class="col-3 col-md-2 col-lg-2">
+                                        <button type="button" class="icon-select-btn btn btn-outline-secondary w-100 p-2" data-icon="fas fa-watch" title="Reloj">
+                                            <i class="fas fa-watch fa-lg"></i>
+                                        </button>
+                                    </div>
+                                    <div class="col-3 col-md-2 col-lg-2">
+                                        <button type="button" class="icon-select-btn btn btn-outline-secondary w-100 p-2" data-icon="fas fa-sun" title="Sol">
+                                            <i class="fas fa-sun fa-lg"></i>
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -119,5 +305,59 @@
         </div>
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const iconSelect = document.getElementById('id_icon_select');
+    const iconPreview = document.getElementById('icon-preview');
+    const colorInput = document.getElementById('id_color');
+    const iconButtons = document.querySelectorAll('.icon-select-btn');
+    
+    // Función para actualizar la vista previa
+    function updatePreview() {
+        const selectedIcon = iconSelect.value;
+        const selectedColor = colorInput.value;
+        iconPreview.className = selectedIcon + ' fa-2x';
+        iconPreview.style.color = selectedColor;
+    }
+    
+    // Función para marcar el botón activo
+    function updateActiveButton() {
+        const selectedIcon = iconSelect.value;
+        iconButtons.forEach(btn => {
+            if (btn.dataset.icon === selectedIcon) {
+                btn.classList.add('active');
+            } else {
+                btn.classList.remove('active');
+            }
+        });
+    }
+    
+    // Cuando cambia el select
+    iconSelect.addEventListener('change', function() {
+        updatePreview();
+        updateActiveButton();
+    });
+    
+    // Cuando cambia el color
+    colorInput.addEventListener('change', function() {
+        updatePreview();
+    });
+    
+    // Cuando se hace clic en un botón de icono
+    iconButtons.forEach(btn => {
+        btn.addEventListener('click', function() {
+            const iconClass = this.dataset.icon;
+            iconSelect.value = iconClass;
+            updatePreview();
+            updateActiveButton();
+        });
+    });
+    
+    // Inicializar vista previa y botones activos
+    updatePreview();
+    updateActiveButton();
+});
+</script>
 {% endblock %}
 

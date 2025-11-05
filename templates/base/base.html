@@ -24,7 +24,7 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container">
             <a class="navbar-brand" href="{% url 'dashboard:dashboard' %}">
-                <i class="fas fa-wallet me-2"></i>Finanzas
+                <i class="fas fa-wallet me-2"></i>{% trans_custom "Finances" %}
             </a>
             
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -34,63 +34,58 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 {% if user.is_authenticated %}
                 <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'dashboard:dashboard' %}">
-                            <i class="fas fa-tachometer-alt me-1"></i>{% trans "Dashboard" %}
-                        </a>
-                    </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="transactionsDropdown" role="button" data-bs-toggle="dropdown">
-                            <i class="fas fa-exchange-alt me-1"></i>{% trans "Transactions" %}
+                            <i class="fas fa-exchange-alt me-1"></i>{% trans_custom "Transactions" %}
                         </a>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="{% url 'transactions:transaction_list' %}">
-                                <i class="fas fa-list me-2"></i>{% trans "All Transactions" %}
+                                <i class="fas fa-list me-2"></i>{% trans_custom "All Transactions" %}
                             </a></li>
                             <li><a class="dropdown-item" href="{% url 'transactions:transaction_create' %}">
-                                <i class="fas fa-plus me-2"></i>{% trans "New Transaction" %}
+                                <i class="fas fa-plus me-2"></i>{% trans_custom "New Transaction" %}
                             </a></li>
                             <li><a class="dropdown-item" href="{% url 'transactions:recurring_transaction_list' %}">
-                                <i class="fas fa-sync-alt me-2"></i>{% trans "Recurring" %}
+                                <i class="fas fa-sync-alt me-2"></i>{% trans_custom "Recurring" %}
                             </a></li>
                             <li><hr class="dropdown-divider"></li>
                             <li><a class="dropdown-item" href="{% url 'transactions:category_list' %}">
-                                <i class="fas fa-tags me-2"></i>{% trans "Categories" %}
+                                <i class="fas fa-tags me-2"></i>{% trans_custom "Categories" %}
                             </a></li>
                             <li><a class="dropdown-item" href="{% url 'transactions:tag_list' %}">
-                                <i class="fas fa-bookmark me-2"></i>{% trans "Tags" %}
+                                <i class="fas fa-bookmark me-2"></i>{% trans_custom "Tags" %}
                             </a></li>
                         </ul>
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="budgetsDropdown" role="button" data-bs-toggle="dropdown">
-                            <i class="fas fa-chart-pie me-1"></i>{% trans "Budgets" %}
+                            <i class="fas fa-chart-pie me-1"></i>{% trans_custom "Budgets" %}
                         </a>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="{% url 'transactions:budget_list' %}">
-                                <i class="fas fa-list me-2"></i>{% trans "View Budgets" %}
+                                <i class="fas fa-list me-2"></i>{% trans_custom "View Budgets" %}
                             </a></li>
                             <li><a class="dropdown-item" href="{% url 'transactions:budget_create' %}">
-                                <i class="fas fa-plus me-2"></i>{% trans "New Budget" %}
+                                <i class="fas fa-plus me-2"></i>{% trans_custom "New Budget" %}
                             </a></li>
                         </ul>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'transactions:savings_goal_list' %}">
-                            <i class="fas fa-piggy-bank me-1"></i>{% trans "Savings Goals" %}
+                            <i class="fas fa-piggy-bank me-1"></i>{% trans_custom "Savings Goals" %}
                         </a>
                     </li>
                     {% if user.profile.is_admin %}
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown">
-                            <i class="fas fa-cog me-1"></i>Administración
+                            <i class="fas fa-cog me-1"></i>{% trans_custom "Administration" %}
                         </a>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="{% url 'accounts:admin_dashboard' %}">
-                                <i class="fas fa-tachometer-alt me-2"></i>Panel Admin
+                                <i class="fas fa-tachometer-alt me-2"></i>{% trans_custom "Admin Dashboard" %}
                             </a></li>
                             <li><a class="dropdown-item" href="{% url 'accounts:user_list' %}">
-                                <i class="fas fa-users me-2"></i>Gestionar Usuarios
+                                <i class="fas fa-users me-2"></i>{% trans_custom "Manage Users" %}
                             </a></li>
                         </ul>
                     </li>
@@ -110,17 +105,17 @@
                         </a>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="{% url 'accounts:profile' %}">
-                                <i class="fas fa-user-circle me-2"></i>{% trans "Profile" %}
+                                <i class="fas fa-user-circle me-2"></i>{% trans_custom "Profile" %}
                             </a></li>
                             <li><a class="dropdown-item" href="{% url 'accounts:change_password' %}">
-                                <i class="fas fa-key me-2"></i>{% trans "Change Password" %}
+                                <i class="fas fa-key me-2"></i>{% trans_custom "Change Password" %}
                             </a></li>
                             <li><hr class="dropdown-divider"></li>
                             <li>
                                 <form method="post" action="{% url 'accounts:logout' %}" style="display: inline;">
                                     {% csrf_token %}
                                     <button type="submit" class="dropdown-item" style="background: none; border: none; padding: 0; margin: 0;">
-                                        <i class="fas fa-sign-out-alt me-2"></i> {% trans "Logout" %}
+                                        <i class="fas fa-sign-out-alt me-2"></i> {% trans_custom "Logout" %}
                                     </button>
                                 </form>
                             </li>
@@ -137,12 +132,12 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'accounts:login' %}">
-                            <i class="fas fa-sign-in-alt me-1"></i>{% trans "Login" %}
+                            <i class="fas fa-sign-in-alt me-1"></i>{% trans_custom "Login" %}
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'accounts:register' %}">
-                            <i class="fas fa-user-plus me-1"></i>{% trans "Register" %}
+                            <i class="fas fa-user-plus me-1"></i>{% trans_custom "Register" %}
                         </a>
                     </li>
                 </ul>
@@ -179,12 +174,12 @@
             <div class="row">
                 <div class="col-md-6">
                     <p class="mb-0 text-muted">
-                        <i class="fas fa-wallet me-1"></i>Gestor de Finanzas Personales
+                        <i class="fas fa-wallet me-1"></i>{% trans_custom "Personal Finance Manager" %}
                     </p>
                 </div>
                 <div class="col-md-6 text-end">
                     <p class="mb-0 text-muted">
-                        &copy; {% now "Y" %} Todos los derechos reservados
+                        &copy; {% now "Y" %} {% trans_custom "All rights reserved" %}
                     </p>
                 </div>
             </div>

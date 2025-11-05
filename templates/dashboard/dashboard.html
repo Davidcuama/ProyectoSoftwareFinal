@@ -6,10 +6,6 @@
 {% block title %}Dashboard - Gestor de Finanzas{% endblock %}
 
 {% block content %}
-{% block breadcrumbs_items %}
-<li class="breadcrumb-item active">{% trans_custom "Dashboard" %}</li>
-{% endblock %}
-
 <div class="container-fluid">
     <!-- Estadísticas principales -->
     <div class="row dashboard-stats fade-in">
@@ -17,7 +13,7 @@
             <div class="stats-card income">
                 <div class="d-flex justify-content-between align-items-center">
                     <div>
-                        <div class="stats-label">{% trans_custom "Total Income" %}</div>
+                        <div class="stats-label">{% trans "Total Income" %}</div>
                         <div class="stats-value" id="total-income">{{ total_income|floatformat:2 }} $</div>
                     </div>
                     <div class="stats-icon">
@@ -30,7 +26,7 @@
             <div class="stats-card expense">
                 <div class="d-flex justify-content-between align-items-center">
                     <div>
-                        <div class="stats-label">{% trans_custom "Total Expenses" %}</div>
+                        <div class="stats-label">{% trans "Total Expenses" %}</div>
                         <div class="stats-value" id="total-expenses">{{ total_expenses|floatformat:2 }} $</div>
                     </div>
                     <div class="stats-icon">
@@ -43,7 +39,7 @@
             <div class="stats-card balance">
                 <div class="d-flex justify-content-between align-items-center">
                     <div>
-                        <div class="stats-label">{% trans_custom "Net Balance" %}</div>
+                        <div class="stats-label">{% trans "Net Balance" %}</div>
                         <div class="stats-value" id="balance">{{ balance|floatformat:2 }} $</div>
                     </div>
                     <div class="stats-icon">
@@ -59,7 +55,7 @@
         <div class="col-12">
             <div class="chart-container">
                 <div class="chart-title">
-                    <i class="fas fa-chart-pie me-2"></i>{% trans_custom "Expenses" %}
+                    <i class="fas fa-chart-pie me-2"></i>{% trans "Expenses" %}
                 </div>
                 <div style="height: 400px; position: relative;">
                     <canvas id="monthly-chart"></canvas>
@@ -73,7 +69,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <i class="fas fa-clock me-2"></i>{% trans_custom "Recent Transactions" %}
+                    <i class="fas fa-clock me-2"></i>{% trans "Recent Transactions" %}
                 </div>
                 <div class="card-body">
                     {% if recent_transactions %}
@@ -101,15 +97,15 @@
                         {% endfor %}
                         <div class="text-center mt-3">
                             <a href="{% url 'transactions:transaction_list' %}" class="btn btn-outline-primary btn-sm">
-                                <i class="fas fa-list me-1"></i>{% trans_custom "View All Transactions" %}
+                                <i class="fas fa-list me-1"></i>{% trans "View All Transactions" %}
                             </a>
                         </div>
                     {% else %}
                         <p class="text-muted text-center py-3">
-                            <i class="fas fa-info-circle me-2"></i>{% trans_custom "No transactions registered" %}
+                            <i class="fas fa-info-circle me-2"></i>{% trans "No transactions registered" %}
                             <br>
                             <a href="{% url 'transactions:transaction_create' %}" class="btn btn-sm btn-primary mt-2">
-                                <i class="fas fa-plus me-1"></i>{% trans_custom "Add Transaction" %}
+                                <i class="fas fa-plus me-1"></i>{% trans "Add Transaction" %}
                             </a>
                         </p>
                     {% endif %}
@@ -123,7 +119,7 @@
         <div class="col-md-4">
             <div class="card">
                 <div class="card-body">
-                    <h6 class="text-muted mb-2">{% trans_custom "Month Income" %}</h6>
+                    <h6 class="text-muted mb-2">{% trans "Month Income" %}</h6>
                     <h3 class="text-success mb-0">{{ month_income|floatformat:2 }} $</h3>
                 </div>
             </div>
@@ -131,7 +127,7 @@
         <div class="col-md-4">
             <div class="card">
                 <div class="card-body">
-                    <h6 class="text-muted mb-2">{% trans_custom "Month Expenses" %}</h6>
+                    <h6 class="text-muted mb-2">{% trans "Month Expenses" %}</h6>
                     <h3 class="text-danger mb-0">{{ month_expenses|floatformat:2 }} $</h3>
                 </div>
             </div>
@@ -139,7 +135,7 @@
         <div class="col-md-4">
             <div class="card">
                 <div class="card-body">
-                    <h6 class="text-muted mb-2">{% trans_custom "Month Balance" %}</h6>
+                    <h6 class="text-muted mb-2">{% trans "Month Balance" %}</h6>
                     <h3 class="{% if month_balance >= 0 %}text-success{% else %}text-danger{% endif %} mb-0">
                         {{ month_balance|floatformat:2 }} $
                     </h3>
@@ -154,9 +150,9 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <i class="fas fa-chart-pie me-2"></i>{% trans_custom "Current Month Budgets" %}
+                    <i class="fas fa-chart-pie me-2"></i>{% trans "Current Month Budgets" %}
                     <a href="{% url 'transactions:budget_list' %}" class="float-end btn btn-sm btn-outline-light">
-                        {% trans_custom "View All" %}
+                        {% trans "View All" %}
                     </a>
                 </div>
                 <div class="card-body">
@@ -194,9 +190,9 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <i class="fas fa-piggy-bank me-2"></i>{% trans_custom "Active Savings Goals" %}
+                    <i class="fas fa-piggy-bank me-2"></i>{% trans "Active Savings Goals" %}
                     <a href="{% url 'transactions:savings_goal_list' %}" class="float-end btn btn-sm btn-outline-light">
-                        {% trans_custom "View All" %}
+                        {% trans "View All" %}
                     </a>
                 </div>
                 <div class="card-body">
@@ -208,7 +204,7 @@
                                     <i class="{{ goal.icon }} me-2" style="color: {{ goal.color }}; font-size: 1.5rem;"></i>
                                     <div>
                                         <strong>{{ goal.name }}</strong>
-                                        <br><small class="text-muted">{{ goal.days_remaining }} {% trans_custom "days remaining" %}</small>
+                                        <br><small class="text-muted">{{ goal.days_remaining }} {% trans "days remaining" %}</small>
                                     </div>
                                 </div>
                                 <div class="progress mb-2" style="height: 25px;">
@@ -235,9 +231,9 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <i class="fas fa-sync-alt me-2"></i>{% trans_custom "Upcoming Recurring Transactions" %}
+                    <i class="fas fa-sync-alt me-2"></i>{% trans "Upcoming Recurring Transactions" %}
                     <a href="{% url 'transactions:recurring_transaction_list' %}" class="float-end btn btn-sm btn-outline-light">
-                        {% trans_custom "View All" %}
+                        {% trans "View All" %}
                     </a>
                 </div>
                 <div class="card-body">
@@ -245,11 +241,11 @@
                         <table class="table table-sm">
                             <thead>
                                 <tr>
-                                    <th>{% trans_custom "Name" %}</th>
-                                    <th>{% trans_custom "Type" %}</th>
-                                    <th>{% trans_custom "Amount" %}</th>
-                                    <th>{% trans_custom "Next Occurrence" %}</th>
-                                    <th>{% trans_custom "Actions" %}</th>
+                                    <th>{% trans "Name" %}</th>
+                                    <th>{% trans "Type" %}</th>
+                                    <th>{% trans "Amount" %}</th>
+                                    <th>{% trans "Next Occurrence" %}</th>
+                                    <th>{% trans "Actions" %}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -269,7 +265,7 @@
                                         {% if recurring.next_occurrence <= today %}
                                         <a href="{% url 'transactions:process_recurring_transaction' recurring.pk %}" 
                                            class="btn btn-sm btn-success">
-                                            <i class="fas fa-play me-1"></i>{% trans_custom "Process" %}
+                                            <i class="fas fa-play me-1"></i>{% trans "Process" %}
                                         </a>
                                         {% endif %}
                                     </td>
@@ -289,28 +285,28 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <i class="fas fa-bolt me-2"></i>{% trans_custom "Quick Actions" %}
+                    <i class="fas fa-bolt me-2"></i>{% trans "Quick Actions" %}
                 </div>
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-3 col-sm-6 mb-3">
                             <a href="{% url 'transactions:transaction_create' %}" class="btn btn-primary w-100">
-                                <i class="fas fa-plus me-2"></i>{% trans_custom "New Transaction" %}
+                                <i class="fas fa-plus me-2"></i>{% trans "New Transaction" %}
                             </a>
                         </div>
                         <div class="col-md-3 col-sm-6 mb-3">
                             <a href="{% url 'transactions:budget_create' %}" class="btn btn-info w-100">
-                                <i class="fas fa-chart-pie me-2"></i>{% trans_custom "New Budget" %}
+                                <i class="fas fa-chart-pie me-2"></i>{% trans "New Budget" %}
                             </a>
                         </div>
                         <div class="col-md-3 col-sm-6 mb-3">
                             <a href="{% url 'transactions:savings_goal_create' %}" class="btn btn-success w-100">
-                                <i class="fas fa-piggy-bank me-2"></i>{% trans_custom "New Goal" %}
+                                <i class="fas fa-piggy-bank me-2"></i>{% trans "New Goal" %}
                             </a>
                         </div>
                         <div class="col-md-3 col-sm-6 mb-3">
                             <a href="{% url 'transactions:recurring_transaction_create' %}" class="btn btn-warning w-100">
-                                <i class="fas fa-sync-alt me-2"></i>{% trans_custom "New Recurring" %}
+                                <i class="fas fa-sync-alt me-2"></i>{% trans "New Recurring" %}
                             </a>
                         </div>
                     </div>

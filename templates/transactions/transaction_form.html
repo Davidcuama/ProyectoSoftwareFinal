@@ -1,6 +1,6 @@
 {% extends 'base/base.html' %}
 {% load static %}
-{% load translate %}
+{% load i18n %}
 
 {% block title %}
     {% if form.instance.pk %}Editar Transacción{% else %}Nueva Transacción{% endif %} - Gestor de Finanzas
@@ -8,8 +8,12 @@
 
 {% block content %}
 {% block breadcrumbs_items %}
-<li class="breadcrumb-item"><a href="{% url 'transactions:transaction_list' %}">{% trans_custom "Transactions" %}</a></li>
-<li class="breadcrumb-item active">{% if form.instance.pk %}{% trans_custom "Edit Transaction" %}{% else %}{% trans_custom "New Transaction" %}{% endif %}</li>
+<nav aria-label="breadcrumb" class="mb-3">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'transactions:transaction_list' %}">{% trans "Transactions" %}</a></li>
+        <li class="breadcrumb-item active">{% if form.instance.pk %}{% trans "Edit Transaction" %}{% else %}{% trans "New Transaction" %}{% endif %}</li>
+    </ol>
+</nav>
 {% endblock %}
 
 <div class="container">

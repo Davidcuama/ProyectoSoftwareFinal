@@ -1,26 +1,23 @@
 {% extends 'base/base.html' %}
 {% load static %}
+{% load i18n %}
 {% load translate %}
 
 {% block title %}Transacciones - Gestor de Finanzas{% endblock %}
 
 {% block content %}
-{% block breadcrumbs_items %}
-<li class="breadcrumb-item active">{% trans_custom "Transactions" %}</li>
-{% endblock %}
-
 <div class="container-fluid">
     <!-- Header -->
     <div class="row mb-4">
         <div class="col-md-6">
-            <h2><i class="fas fa-exchange-alt me-2"></i>{% trans_custom "Transactions" %}</h2>
+            <h2><i class="fas fa-exchange-alt me-2"></i>{% trans "Transactions" %}</h2>
         </div>
         <div class="col-md-6 text-end">
             <a href="{% url 'transactions:transaction_create' %}" class="btn btn-primary">
-                <i class="fas fa-plus me-2"></i>{% trans_custom "New Transaction" %}
+                <i class="fas fa-plus me-2"></i>{% trans "New Transaction" %}
             </a>
             <a href="{% url 'transactions:export_transactions' %}" class="btn btn-outline-success" id="export-transactions">
-                <i class="fas fa-download me-2"></i>{% trans_custom "Export CSV" %}
+                <i class="fas fa-download me-2"></i>{% trans "Export CSV" %}
             </a>
         </div>
     </div>
@@ -28,15 +25,15 @@
     <!-- Filtros -->
     <div class="card mb-4">
         <div class="card-header">
-            <i class="fas fa-filter me-2"></i>{% trans_custom "Filters" %}
+            <i class="fas fa-filter me-2"></i>{% trans "Filters" %}
         </div>
         <div class="card-body">
             <form method="get" id="transaction-filter-form">
                 <div class="row">
                     <div class="col-md-3">
-                        <label class="form-label">{% trans_custom "Type" %}</label>
+                        <label class="form-label">{% trans "Type" %}</label>
                         <select name="type" class="form-select">
-                            <option value="">{% trans_custom "All" %}</option>
+                            <option value="">{% trans "All" %}</option>
                             {% for value, label in transaction_types %}
                             <option value="{{ value }}" {% if request.GET.type == value %}selected{% endif %}>
                                 {{ label }}
@@ -45,16 +42,16 @@
                         </select>
                     </div>
                     <div class="col-md-3">
-                        <label class="form-label">{% trans_custom "From" %}</label>
+                        <label class="form-label">{% trans "From" %}</label>
                         <input type="date" name="date_from" class="form-control" value="{{ request.GET.date_from }}">
                     </div>
                     <div class="col-md-3">
-                        <label class="form-label">{% trans_custom "To" %}</label>
+                        <label class="form-label">{% trans "To" %}</label>
                         <input type="date" name="date_to" class="form-control" value="{{ request.GET.date_to }}">
                     </div>
                     <div class="col-md-2">
-                        <label class="form-label">{% trans_custom "Search" %}</label>
-                        <input type="text" name="search" class="form-control" placeholder="{% trans_custom 'Description' %}..." value="{{ request.GET.search }}">
+                        <label class="form-label">{% trans "Search" %}</label>
+                        <input type="text" name="search" class="form-control" placeholder="{% trans 'Description' %}..." value="{{ request.GET.search }}">
                     </div>
                     <div class="col-md-1">
                         <label class="form-label">&nbsp;</label>
@@ -73,7 +70,7 @@
             <div class="stats-card income">
                 <div class="d-flex justify-content-between align-items-center">
                     <div>
-                        <div class="stats-label">{% trans_custom "Total Income" %}</div>
+                        <div class="stats-label">{% trans "Total Income" %}</div>
                         <div class="stats-value">{{ total_income|floatformat:2 }} $</div>
                     </div>
                     <div class="stats-icon">
@@ -86,7 +83,7 @@
             <div class="stats-card expense">
                 <div class="d-flex justify-content-between align-items-center">
                     <div>
-                        <div class="stats-label">{% trans_custom "Total Expenses" %}</div>
+                        <div class="stats-label">{% trans "Total Expenses" %}</div>
                         <div class="stats-value">{{ total_expenses|floatformat:2 }} $</div>
                     </div>
                     <div class="stats-icon">
@@ -99,7 +96,7 @@
             <div class="stats-card balance">
                 <div class="d-flex justify-content-between align-items-center">
                     <div>
-                        <div class="stats-label">{% trans_custom "Net Balance" %}</div>
+                        <div class="stats-label">{% trans "Net Balance" %}</div>
                         <div class="stats-value">{{ balance|floatformat:2 }} $</div>
                     </div>
                     <div class="stats-icon">
@@ -113,8 +110,8 @@
     <!-- Lista de transacciones -->
     <div class="card">
         <div class="card-header">
-            <i class="fas fa-list me-2"></i>{% trans_custom "Transaction List" %}
-            <span class="badge bg-primary ms-2">{{ page_obj.paginator.count }} {% trans_custom "transactions" %}</span>
+            <i class="fas fa-list me-2"></i>{% trans "Transaction List" %}
+            <span class="badge bg-primary ms-2">{{ page_obj.paginator.count }} {% trans "transactions" %}</span>
         </div>
         <div class="card-body p-0">
             {% if transactions %}
@@ -122,12 +119,12 @@
                 <table class="table table-hover mb-0">
                     <thead>
                         <tr>
-                            <th>{% trans_custom "Date" %}</th>
-                            <th>{% trans_custom "Type" %}</th>
-                            <th>{% trans_custom "Category" %}</th>
-                            <th>{% trans_custom "Description" %}</th>
-                            <th class="text-end">{% trans_custom "Amount" %}</th>
-                            <th class="text-center">{% trans_custom "Actions" %}</th>
+                            <th>{% trans "Date" %}</th>
+                            <th>{% trans "Type" %}</th>
+                            <th>{% trans "Category" %}</th>
+                            <th>{% trans "Description" %}</th>
+                            <th class="text-end">{% trans "Amount" %}</th>
+                            <th class="text-center">{% trans "Actions" %}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -145,14 +142,14 @@
                                         <i class="{{ transaction.category.icon }} me-1"></i>{{ transaction.category.name }}
                                     </span>
                                 {% else %}
-                                    <span class="text-muted">{% trans_custom "No category" %}</span>
+                                    <span class="text-muted">{% trans "No category" %}</span>
                                 {% endif %}
                             </td>
                             <td>
                                 {% if transaction.description %}
                                     {{ transaction.description|truncatechars:50 }}
                                 {% else %}
-                                    <span class="text-muted">{% trans_custom "No description" %}</span>
+                                    <span class="text-muted">{% trans "No description" %}</span>
                                 {% endif %}
                                 {% if transaction.tags.all %}
                                     <div class="mt-1">
@@ -174,13 +171,13 @@
                                     <a href="{% url 'transactions:transaction_update' transaction.pk %}" 
                                        class="btn btn-outline-primary" 
                                        data-bs-toggle="tooltip" 
-                                       title="{% trans_custom 'Edit' %}">
+                                       title="{% trans 'Edit' %}">
                                         <i class="fas fa-edit"></i>
                                     </a>
                                     <a href="{% url 'transactions:transaction_delete' transaction.pk %}" 
                                        class="btn btn-outline-danger btn-delete" 
                                        data-bs-toggle="tooltip" 
-                                       title="{% trans_custom 'Delete' %}">
+                                       title="{% trans 'Delete' %}">
                                         <i class="fas fa-trash"></i>
                                     </a>
                                 </div>
@@ -193,10 +190,10 @@
             {% else %}
             <div class="text-center py-5">
                 <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
-                <h5 class="text-muted">{% trans_custom "No transactions registered" %}</h5>
-                <p class="text-muted">{% trans_custom "Start by adding your first transaction" %}</p>
+                <h5 class="text-muted">{% trans "No transactions registered" %}</h5>
+                <p class="text-muted">{% trans "Start by adding your first transaction" %}</p>
                 <a href="{% url 'transactions:transaction_create' %}" class="btn btn-primary">
-                    <i class="fas fa-plus me-2"></i>{% trans_custom "Add Transaction" %}
+                    <i class="fas fa-plus me-2"></i>{% trans "Add Transaction" %}
                 </a>
             </div>
             {% endif %}

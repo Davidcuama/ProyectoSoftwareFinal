@@ -1,23 +1,20 @@
 {% extends 'base/base.html' %}
 {% load static %}
+{% load i18n %}
 {% load translate %}
 
 {% block title %}Categorías - Gestor de Finanzas{% endblock %}
 
 {% block content %}
-{% block breadcrumbs_items %}
-<li class="breadcrumb-item active">{% trans_custom "Categories" %}</li>
-{% endblock %}
-
 <div class="container-fluid">
     <!-- Header -->
     <div class="row mb-4">
         <div class="col-md-6">
-            <h2><i class="fas fa-tags me-2"></i>{% trans_custom "Categories" %}</h2>
+            <h2><i class="fas fa-tags me-2"></i>{% trans "Categories" %}</h2>
         </div>
         <div class="col-md-6 text-end">
             <a href="{% url 'transactions:category_create' %}" class="btn btn-primary">
-                <i class="fas fa-plus me-2"></i>{% trans_custom "New Category" %}
+                <i class="fas fa-plus me-2"></i>{% trans "New Category" %}
             </a>
         </div>
     </div>
@@ -37,17 +34,12 @@
                             <small class="text-muted">{% translate_type category.get_transaction_type_display %}</small>
                         </div>
                     </div>
-                    <div class="mb-3">
-                        <span class="badge" style="background-color: {{ category.color }};">
-                            {% trans_custom "Color" %}: {{ category.color }}
-                        </span>
-                    </div>
                     <div class="btn-group w-100">
                         <a href="{% url 'transactions:category_update' category.pk %}" class="btn btn-sm btn-outline-primary">
-                            <i class="fas fa-edit"></i> {% trans_custom "Edit" %}
+                            <i class="fas fa-edit"></i> {% trans "Edit" %}
                         </a>
                         <a href="{% url 'transactions:category_delete' category.pk %}" class="btn btn-sm btn-outline-danger">
-                            <i class="fas fa-trash"></i> {% trans_custom "Delete" %}
+                            <i class="fas fa-trash"></i> {% trans "Delete" %}
                         </a>
                     </div>
                 </div>
@@ -58,10 +50,10 @@
             <div class="card">
                 <div class="card-body text-center py-5">
                     <i class="fas fa-tags fa-3x text-muted mb-3"></i>
-                    <h5 class="text-muted">{% trans_custom "No categories" %}</h5>
-                    <p class="text-muted">{% trans_custom "Start by creating your first category" %}</p>
+                    <h5 class="text-muted">{% trans "No categories" %}</h5>
+                    <p class="text-muted">{% trans "Start by creating your first category" %}</p>
                     <a href="{% url 'transactions:category_create' %}" class="btn btn-primary">
-                        <i class="fas fa-plus me-2"></i>{% trans_custom "Create Category" %}
+                        <i class="fas fa-plus me-2"></i>{% trans "Create Category" %}
                     </a>
                 </div>
             </div>

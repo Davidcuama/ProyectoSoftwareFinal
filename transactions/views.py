@@ -4,11 +4,12 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib import messages
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
-from django.db.models import Sum, Q
+from django.db.models import Sum, Q, F
 from django.http import JsonResponse, HttpResponse
 from django.core.paginator import Paginator
 from django.utils import timezone
 from datetime import datetime, timedelta
+from decimal import Decimal
 import csv
 import json
 
@@ -495,17 +496,26 @@ def add_to_savings_goal(request, goal_id):
     if request.method == 'POST':
         amount = request.POST.get('amount')
         try:
-            amount = float(amount)
+            # Convertir a Decimal para trabajar correctamente con DecimalField
+            amount = Decimal(str(amount))
             if amount > 0:
-                goal.current_amount += amount
+                # Actualizar usando F() para evitar problemas de concurrencia
+                SavingsGoal.objects.filter(id=goal_id).update(
+                    current_amount=F('current_amount') + amount
+                )
+                # Refrescar el objeto desde la base de datos
+                goal.refresh_from_db()
+                
+                # Verificar si se alcanzó la meta
                 if goal.current_amount >= goal.target_amount:
                     goal.current_amount = goal.target_amount
                     goal.is_achieved = True
-                goal.save()
+                    goal.save()
+                
                 messages.success(request, f'Se agregaron ${amount:.2f} a la meta "{goal.name}".')
             else:
                 messages.error(request, 'El monto debe ser mayor a 0.')
-        except (ValueError, TypeError):
+        except (ValueError, TypeError, Exception) as e:
             messages.error(request, 'Monto inválido.')
     
     return redirect('transactions:savings_goal_list')
