@@ -169,8 +169,8 @@
                                     <small class="text-muted">{{ budget.percentage_used|floatformat:1 }}%</small>
                                 </div>
                                 <div class="progress mb-2" style="height: 20px;">
-                                    <div class="progress-bar {% if budget.is_over_budget %}bg-danger{% elif budget.percentage_used > 80 %}bg-warning{% else %}bg-success{% endif %}" 
-                                         style="width: {% if budget.percentage_used > 100 %}100{% else %}{{ budget.percentage_used }}{% endif %}%">
+                             <div class="progress-bar {% if budget.is_over_budget %}bg-danger{% elif budget.percentage_used > 80 %}bg-warning{% else %}bg-success{% endif %}" 
+                                 style="width: {{ budget.percentage_used_css }}">
                                     </div>
                                 </div>
                                 <small class="text-muted">${{ budget.spent|floatformat:2 }} / ${{ budget.amount|floatformat:2 }}</small>
@@ -208,9 +208,9 @@
                                     </div>
                                 </div>
                                 <div class="progress mb-2" style="height: 25px;">
-                                    <div class="progress-bar bg-info" style="width: {{ goal.percentage_completed }}%">
-                                        {{ goal.percentage_completed|floatformat:1 }}%
-                                    </div>
+                                    <div class="progress-bar bg-info" style="width: {{ goal.percentage_completed_css }}">
+                                            {{ goal.percentage_completed|floatformat:1 }}%
+                                        </div>
                                 </div>
                                 <small class="text-muted">
                                     ${{ goal.current_amount|floatformat:2 }} / ${{ goal.target_amount|floatformat:2 }}

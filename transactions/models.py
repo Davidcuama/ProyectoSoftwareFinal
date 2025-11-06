@@ -187,6 +187,20 @@ class Budget(models.Model):
             return 0
         return min(100, (self.spent / self.amount) * 100)
     
+
+    @property
+    def percentage_used_css(self):
+        """Valor formateado para usar en CSS/atributos (usar punto decimal, no localizado)."""
+        if self.amount == 0:
+            return "0%"
+        val = min(100, (self.spent / self.amount) * 100)
+        try:
+            # Asegurar un string con punto decimal y 1 decimal y añadir '%'
+            return format(float(val), '.1f') + '%'
+        except Exception:
+            return str(val) + '%'
+    
+
     @property
     def is_over_budget(self):
         """Retorna True si se excedió el presupuesto."""
@@ -235,6 +249,18 @@ class SavingsGoal(models.Model):
             return 0
         return min(100, (self.current_amount / self.target_amount) * 100)
     
+    @property
+    def percentage_completed_css(self):
+        """Valor formateado para usar en CSS/atributos (usar punto decimal, no localizado)."""
+        if self.target_amount == 0:
+            return "0%"
+        val = min(100, (self.current_amount / self.target_amount) * 100)
+        try:
+            # Devolver con punto decimal y sufijo % para usar directamente en CSS
+            return format(float(val), '.1f') + '%'
+        except Exception:
+            return str(val) + '%'
+
     @property
     def remaining_amount(self):
         """Calcula el monto restante para alcanzar la meta."""

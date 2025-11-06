@@ -27,7 +27,7 @@
                     <div class="d-flex justify-content-between align-items-start mb-3">
                         <div>
                             <h5 class="card-title mb-1">
-                                <span class="badge" style="background-color: {{ budget.category.color }};">
+                                <span class="badge category-badge" data-bg="{{ budget.category.color }}">
                                     <i class="{{ budget.category.icon }} me-1"></i>{{ budget.category.name }}
                                 </span>
                             </h5>
@@ -56,8 +56,8 @@
                         <div class="progress" style="height: 20px;">
                             <div class="progress-bar {% if budget.is_over_budget %}bg-danger{% elif budget.percentage_used > 80 %}bg-warning{% else %}bg-success{% endif %}" 
                                  role="progressbar" 
-                                 style="width: {% if budget.percentage_used > 100 %}100{% else %}{{ budget.percentage_used }}{% endif %}%"
-                                 aria-valuenow="{{ budget.percentage_used }}" 
+                                 style="width: {{ budget.percentage_used_css }}" 
+                                 aria-valuenow="{{ budget.percentage_used|floatformat:1 }}" 
                                  aria-valuemin="0" 
                                  aria-valuemax="100">
                                 {{ budget.percentage_used|floatformat:1 }}%
@@ -95,5 +95,19 @@
         {% endfor %}
     </div>
 </div>
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+    // Apply background colors from data-bg
+    document.querySelectorAll('[data-bg]').forEach(function(el){
+        var c = el.getAttribute('data-bg');
+        if(c) el.style.backgroundColor = c;
+    });
+    // Apply widths from data-width (add %)
+    document.querySelectorAll('[data-width]').forEach(function(el){
+        var w = el.getAttribute('data-width');
+        if(w !== null) el.style.width = w + '%';
+    });
+});
+</script>
 {% endblock %}
 

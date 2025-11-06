@@ -27,7 +27,7 @@
                     <div class="d-flex justify-content-between align-items-start mb-3">
                         <div>
                             <h5 class="card-title mb-1">
-                                <i class="{{ goal.icon }} me-2" style="color: {{ goal.color }};"></i>{{ goal.name }}
+                                <i class="{{ goal.icon }} me-2" data-color="{{ goal.color }}"></i>{{ goal.name }}
                             </h5>
                             {% if goal.is_achieved %}
                                 <span class="badge bg-success">
@@ -51,8 +51,8 @@
                         <div class="progress" style="height: 25px;">
                             <div class="progress-bar {% if goal.is_achieved %}bg-success{% else %}bg-info{% endif %}" 
                                  role="progressbar" 
-                                 style="width: {{ goal.percentage_completed }}%"
-                                 aria-valuenow="{{ goal.percentage_completed }}" 
+                                 style="width: {{ goal.percentage_completed_css }}" 
+                                 aria-valuenow="{{ goal.percentage_completed|floatformat:1 }}" 
                                  aria-valuemax="100">
                                 {{ goal.percentage_completed|floatformat:1 }}%
                             </div>
@@ -110,5 +110,24 @@
         {% endfor %}
     </div>
 </div>
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+    // Apply colors from data-color
+    document.querySelectorAll('[data-color]').forEach(function(el){
+        var c = el.getAttribute('data-color');
+        if(c) el.style.color = c;
+    });
+
+    // Just in case some progress bars still use data-width, normalize comma to dot
+    document.querySelectorAll('[data-width]').forEach(function(el){
+        var w = el.getAttribute('data-width');
+        if(w !== null){
+            // normalize localized decimal comma to dot
+            w = w.toString().replace(',', '.');
+            el.style.width = w + '%';
+        }
+    });
+});
+</script>
 {% endblock %}
 
